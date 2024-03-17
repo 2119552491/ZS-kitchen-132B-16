@@ -1,0 +1,321 @@
+
+#include "XL_common.h"
+
+
+
+#if XL_RTC_Flash | XL_RTC_MIC_Flash 
+
+void LED_3_Flash_Mode_TABLE();
+void LED_7_Flash_Mode_TABLE(); 
+
+void LED_3_Flash_Mode();
+void LED_7_Flash_Mode();
+
+
+void LED_7_Flash_Mode() // RTC_1ms_tick && LED_Flash_warning_F == 0
+{
+	if( Led_time_1ms_tick >= 35  )  // Led_time_1ms_tick ON_F && IR_MIC_F == 2 22 
+	{
+		Led_time_1ms_tick= 0;
+		time_led_speed_ms_tick++;	// time_LED_LEVEL_Max_tick Led_time_1ms_tick
+
+		if ( time_led_speed_ms_tick >=  led_speed  ) // 255 led_speed_Max led_level LED_LEVEL_Max RTC_mode_15_count
+		{
+			time_led_speed_ms_tick = 0;
+
+			if( RTC_mode ==  5  ) // RTC_mode_huxi_Max + RTC_mode_fade_Max + 1
+			{	
+				if( decrease_F )
+				{
+					decrease_F = 0;
+
+					Time_Count++;
+					if( Time_Count >= 7 + 1 )
+						Time_Count = 1;
+
+					a = Time_Count  ;// Color_mode_RGB_Max
+					LED_7_JUMP_Mode_TABLE();//      IR_Key_Table(); IR_Key_Color_Table
+					Color_mode  = a;// short_mode_init_F = 1;
+				}
+				else
+				{
+					decrease_F  = 1;
+
+					Color_mode  = 0;
+				}
+			}
+			Color_INIT_LEVEL_TAB();
+		}
+	}
+}
+/*
+void LED_7_Flash_Mode() // RTC_1ms_tick && LED_Flash_warning_F == 0
+{
+	if( Led_time_1ms_tick >= 30  )  // Led_time_1ms_tick ON_F && IR_MIC_F == 2 22 
+	{
+		Led_time_1ms_tick= 0;
+		time_led_speed_ms_tick++;	// time_LED_LEVEL_Max_tick Led_time_1ms_tick
+
+		if ( time_led_speed_ms_tick >=  led_speed  ) // 255 led_speed_Max led_level LED_LEVEL_Max RTC_mode_15_count
+		{
+			time_led_speed_ms_tick = 0;
+
+			short_mode_init_F = 1;
+
+
+			Time_Count++;
+
+
+			if( Time_Count >= 7 + 1 )
+			{
+				Time_Count = 1;
+
+			}
+
+			a = Time_Count;// XL_temp_count
+			LED_7_Flash_Mode_TABLE3();
+			Color_mode = Time_Count;
+			//Color_mode = LED_7_Flash_Mode_TABLE[ Time_Count ]
+
+
+			Color_INIT_LEVEL_TAB();
+		}
+	}
+}
+
+void LED_3_Flash_Mode() // RTC_1ms_tick && LED_Flash_warning_F == 0
+{
+	if( Led_time_50us_tick >= led_speed  )  // Led_time_1ms_tick ON_F && IR_MIC_F == 2 22 
+	{
+		Led_time_50us_tick= 0;
+		time_led_speed_ms_tick++;	// time_LED_LEVEL_Max_tick Led_time_1ms_tick
+
+		if ( time_led_speed_ms_tick >=  led_level_Max  ) // 255 led_speed_Max led_level LED_LEVEL_Max RTC_mode_15_count
+		{
+			time_led_speed_ms_tick = 0;
+
+			Time_Count++;
+			if( Time_Count >= 3 + 1)
+				Time_Count = 1;
+			a = Time_Count;// XL_temp_count
+			LED_3_Flash_Mode_TABLE();
+			Color_mode = a;
+			//Color_mode = LED_3_Flash_Mode_TABLE[ Time_Count ]
+			Color_INIT_LEVEL_TAB();
+
+		}
+	}
+}
+
+void LED_7_Flash_Mode_TABLE()// R-B-G-RB-RG-GB-RGB
+{
+	a += 1;
+	pcadd a;
+	ret 0
+
+	ret 1
+	ret 6
+	ret 11 
+
+	ret 5 
+	ret 15
+	ret 10
+
+	ret 16
+}
+
+
+
+void LED_7_Flash_Mode_TABLE1()// R-B-G-RB-RG-GB-RGB
+{
+	a += 1;
+	pcadd a;
+	ret 0
+
+	ret 1
+	ret 11 
+	ret 6
+	ret 15 
+	ret 10 
+	ret 5 
+}
+
+void LED_7_Flash_Mode_TABLE2()// R-B-G-RB-RG-GB-RGB
+{
+	a += 1;
+	pcadd a;
+	ret 0
+
+	ret 1
+	ret 11 
+	ret 6
+	ret 15 
+	ret 5  
+	ret 10 
+	ret 16 
+}
+
+void LED_7_Flash_Mode_TABLE3()// LED_7_Flash_Mode_TABLE3 R-B-G-RB-RG-GB-RGB
+{
+	a += 1;
+	pcadd a;
+	ret 0
+
+	ret 1
+	ret 1
+	ret 0
+
+	ret 11 
+	ret 11 
+	ret 0
+
+	ret 6
+	ret 6
+	ret 0
+
+}
+
+
+
+void LED_7_Flash_Mode() // RTC_1ms_tick && LED_Flash_warning_F == 0
+{
+	if( Led_time_1ms_tick >= 100  )  // Led_time_1ms_tick ON_F && IR_MIC_F == 2 22 
+	{
+		Led_time_1ms_tick= 0;
+		time_led_speed_ms_tick++;	// time_LED_LEVEL_Max_tick Led_time_1ms_tick
+
+		if ( time_led_speed_ms_tick >=  led_speed  ) // 255 led_speed_Max led_level LED_LEVEL_Max RTC_mode_15_count
+		{
+			time_led_speed_ms_tick = 0;
+
+			Time_Count++;
+
+			if( IR_SETP == 1 )	
+			{
+				if( Time_Count >= 6 + 1 )
+				{
+					Time_Count = 1;
+
+					step_1_value++;
+					if( step_1_value >= 1 )
+					{
+						step_1_value = 0;
+						IR_SETP = 2;
+					}
+				}
+			}
+			else if( IR_SETP == 2 )	
+			{
+				if( Time_Count >= 7 + 1 )
+				{
+					Time_Count = 1;
+
+					step_2_value++;
+					if( step_2_value >= 6 )
+					{
+						step_2_value = 0;
+						IR_SETP = 3;
+					}
+				}
+			}
+			else if( IR_SETP == 3 )	
+			{
+				if( Time_Count >= 9 + 1 )
+				{
+					Time_Count = 1;
+
+					step_3_value++;
+					if( step_3_value >= 3 )
+					{
+						step_3_value = 0;
+						IR_SETP = 1;
+					}
+				}
+			}
+
+			if( IR_SETP == 1 )	
+			{
+				led_speed = 10;
+				a = Time_Count;// XL_temp_count
+				LED_7_Flash_Mode_TABLE1();
+				Color_mode = a;
+				//Color_mode = LED_7_Flash_Mode_TABLE[ Time_Count ]
+			}
+			else if( IR_SETP == 2 )	
+			{
+				led_speed = 2;
+				a = Time_Count;// XL_temp_count
+				LED_7_Flash_Mode_TABLE2();
+				Color_mode = a;
+				//Color_mode = LED_7_Flash_Mode_TABLE[ Time_Count ]
+			}
+			else if( IR_SETP == 3 )	
+			{
+				led_speed = 1;
+				a = Time_Count;// XL_temp_count
+				LED_7_Flash_Mode_TABLE3();
+				Color_mode = a;
+				//Color_mode = LED_7_Flash_Mode_TABLE[ Time_Count ]
+			}
+
+			Color_INIT_LEVEL_TAB();
+		}
+	}
+}
+
+
+
+
+
+
+
+*/
+
+
+/*
+void LED_7_Flash_Mode_TABLE() // R-G-B-RG-GB-RB-RGB
+{
+	a += 1;
+	pcadd a;
+	ret 1
+
+	ret 1
+	ret 2
+	ret 3
+	ret 4
+//	ret 5
+	ret 6
+	ret 7
+	ret 8
+}
+*/
+/*
+
+void LED_3_Flash_Mode_TABLE() // R-G-B-
+{
+	a += 1;
+	pcadd a;
+	ret 1
+
+	ret 1
+	ret 6
+	ret 11
+
+}
+
+void LED_7_Flash_Mode_TABLE() // R-G-B-RG-GB-RB-RGB
+{
+	a += 1;
+	pcadd a;
+	ret 1
+
+	ret 1
+	ret 5
+	ret 6
+	ret 10
+	ret 11
+	ret 15
+	ret 17
+}
+*/
+#endif

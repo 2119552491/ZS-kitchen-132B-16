@@ -1,0 +1,163 @@
+
+#include "common.h"
+
+#if XL_led_RTC		   
+
+void LED_7_Smooth_Mode_TABLE();
+void LED_7_Fade_Mode_TABLE(); 
+
+void LED_7_Smooth_Mode_TABLE()
+{
+	a += 1;
+	pcadd a;
+	ret 1
+
+	ret 1
+	ret 5
+	ret 6
+	ret 10
+	ret 11
+	ret 15
+	ret 17
+}
+
+void LED_R_sub_G_add() // S1   F1
+{
+	LED_R_PWM_expect -=led_level_count;
+	LED_G_PWM_expect +=led_level_count; 
+}
+
+void LED_G_sub_B_add()// S2  F2
+{
+	LED_G_PWM_expect -=led_level_count;
+	LED_B_PWM_expect +=led_level_count; 
+}
+/*
+
+void LED_G_B_sub() // S1   F1
+{
+	LED_B_PWM_expect --;
+	LED_G_PWM_expect --;
+}
+
+void LED_R_add() // S1   F1
+{
+	LED_R_PWM_expect ++;
+}
+
+void LED_R_sub() // S1   F1
+{
+	LED_R_PWM_expect --;
+}
+
+void LED_G_add() // S1   F1
+{
+	LED_G_PWM_expect ++;
+}
+
+void LED_G_sub() // S1   F1
+{
+	LED_G_PWM_expect --;
+}
+
+void LED_B_add() // S1   F1
+{
+	LED_B_PWM_expect ++;
+}
+
+void LED_B_sub() // S1   F1
+{
+	LED_B_PWM_expect --;
+}
+
+void LED_R_sub_G_sub() // S1   F1
+{
+	LED_R_PWM_expect --;
+	LED_G_PWM_expect --;
+}
+
+void LED_R_add_G_add() // S1   F1
+{
+	LED_R_PWM_expect ++;
+	LED_G_PWM_expect ++;
+}
+
+void LED_G_sub_B_sub() // S1   F1
+{
+	LED_B_PWM_expect --;
+	LED_G_PWM_expect --;
+}
+
+void LED_G_add_B_add() // S1   F1
+{
+	LED_B_PWM_expect ++;
+	LED_G_PWM_expect ++;
+}
+
+void LED_R_sub_B_sub() // S1   F1
+{
+	LED_R_PWM_expect --;
+	LED_B_PWM_expect --;
+}
+
+void LED_R_add_B_add() // S1   F1
+{
+	LED_R_PWM_expect ++;
+	LED_B_PWM_expect ++;
+}
+
+void LED_R_sub_G_sub_B_sub() // S1   F1
+{
+	LED_R_PWM_expect --;
+	LED_G_PWM_expect --;
+	LED_B_PWM_expect --;
+}
+
+void LED_R_add_G_add_B_add() // S1   F1
+{
+	LED_R_PWM_expect ++;
+	LED_G_PWM_expect ++;
+	LED_B_PWM_expect ++;
+}
+*/
+void LED_B_sub_R_add() // S1   F1
+{
+	LED_R_PWM_expect +=led_level_count;
+//	LED_G_PWM_expect ++;
+	LED_B_PWM_expect -=led_level_count;
+}
+
+
+/*
+void Mode_7_TABLE()
+{
+	a += 1;
+	pcadd a;
+        GOTO         LED_R_add 		 			
+        GOTO         LED_G_add		
+		GOTO         LED_R_sub // LED_R_add_G_add 		 
+        GOTO         LED_B_add // LED_R_sub_G_sub 	
+
+        GOTO         LED_G_sub 		 			
+        GOTO         LED_R_add  
+		GOTO         LED_G_add // LED_G_add_B_add 
+
+        GOTO         LED_G_sub_B_sub 
+}
+*/
+
+
+
+
+
+/*
+void LED_3_Fade_Mode_TABLE()
+{
+	a += 1;
+	pcadd a;
+        GOTO         LED_R_sub_G_add 	
+        GOTO         LED_G_sub_B_add  
+        GOTO         LED_B_sub_R_add
+}
+*/
+#endif

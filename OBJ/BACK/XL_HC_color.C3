@@ -1,0 +1,24 @@
+
+#include "XL_common.h"
+
+#if XL_huancai		   
+
+void LED_Color_Mode();
+
+void LED_Color_Mode() // RTC_1ms_tick && LED_Flash_warning_F == 0
+{
+	if( Led_time_50us_tick >= 20  )  // Led_time_1ms_tick ON_F && IR_MIC_F == 2 22 
+	{
+		Led_time_50us_tick= 0;
+		time_led_speed_ms_tick++;	// time_LED_LEVEL_Max_tick Led_time_1ms_tick
+
+		if ( time_led_speed_ms_tick >=  20  ) // 255 led_speed_Max led_level LED_LEVEL_Max RTC_mode_15_count
+		{
+			time_led_speed_ms_tick = 0;
+
+			send_all_byte();
+		}
+	}
+}
+
+#endif

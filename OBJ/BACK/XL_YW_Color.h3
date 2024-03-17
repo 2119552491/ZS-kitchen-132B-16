@@ -1,0 +1,12 @@
+
+
+extern	byte LED_Y_PWM_expect;
+extern	byte LED_W_PWM_expect;
+
+extern	byte LED_Y_PWM_temp;
+extern	byte LED_W_PWM_temp;
+
+extern void Color_INIT_LEVEL_TAB_YW();
+#define YW_Color 			 1
+#define Color_mode_WY_Max  	 64 
+#define Color_mode_YW_Max  	 64 

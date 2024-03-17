@@ -1,0 +1,373 @@
+
+#include "XL_common.h"
+
+void Key_scan();
+
+#if XL_Key_juzheng
+
+#if XL_key_1
+	byte key1_tick;
+
+	#if XL_key_1_long
+		bit KEY_long_time_F1;
+	#endif
+
+#endif
+
+#if XL_key_2
+	byte key2_tick;
+
+	#if XL_key_2_long
+		bit KEY_long_time_F2;
+	#endif
+
+#endif
+
+#if XL_key_3
+	byte key3_tick;
+
+	#if XL_key_3_long
+		bit KEY_long_time_F3;
+	#endif
+#endif
+
+#if XL_key_4
+	byte key4_tick;
+
+	#if XL_key_4_long
+		bit KEY_long_time_F4;
+	#endif
+#endif
+
+byte juzheng_key_scan_step;
+byte key_F;
+bit sewen_sub;
+void Key_scan()
+{
+	if( IR_LED_ON_F  )
+		key1_tick++;
+
+	key2_tick++;
+	switch( juzheng_key_scan_step )
+	{
+		case 0: //   
+		{
+		//	PAC    =  ~(T_Key1_mode   | T_Key2_mode );    //1:输出, 0:输入   PA7/1=input 
+		//	PAPH   =  T_Key1_mode | output_key1_mode | T_Key2_mode;
+			output_key1 = 1;
+			Delay10us();
+		//	Delay10us();
+		//	Delay10us();
+			juzheng_key_scan_step = 1;
+			
+			#if XL_key_1
+				if( T_Key1_Signal == 0 ) //  //  LED
+				{
+				//	juzheng_key_scan_step = 0;
+					if( Key1_tick >= key_long_time )  
+					{
+						Key1_tick  = key_long_time;
+
+						#if XL_key_1_long //  
+							if( KEY_long_time_F1 == 0 )
+							{	
+								KEY_long_time_F1 = 1;
+								IR_KEY_L_deal = 201;
+							}
+						#endif
+					}
+				}
+				else
+				{
+					if (  Key1_tick >= Key_short_time   )  
+					{
+						//short_mode_init_F = 1;
+						#if XL_key_1_long // #endif
+							if ( KEY_long_time_F1 == 0 )
+						#endif
+							{
+								short_key_add();
+							}
+						#if XL_key_1_long // #endif
+							IR_KEY_L_deal = 0;
+						#endif
+					}
+					#if XL_24C02		   
+						save_step = 1;//save_comval();
+					#endif
+					Key1_tick = 0;
+					#if XL_key_1_long // #endif
+						KEY_long_time_F1 = 0;
+					#endif
+				}
+			#endif
+
+			#if XL_key_2
+				if( T_Key2_Signal == 0 ) //  //  LED
+				{
+				//	juzheng_key_scan_step = 0;
+					if( Key2_tick >= key_long_time )  
+					{
+						Key2_tick  = key_long_time;
+
+						#if XL_key_2_long //  
+							if( KEY_long_time_F2 == 0 )
+							{	
+								KEY_long_time_F2 = 1;
+							//	IR_KEY_L_deal = 201;
+							}
+						#endif
+					}
+				}
+				else
+				{
+					if (  Key2_tick >= Key_short_time   )  
+					{
+						short_mode_init_F = 1;
+
+						#if XL_key_2_long // #endif
+							if ( KEY_long_time_F2 == 0 )
+						#endif
+							{
+									 if( led_mode == 0 )
+									led_mode = led_mode_Max_1_4;
+								else if( led_mode == led_mode_Max_1_4 && sewen_sub == 0 )
+									led_mode = led_mode_Max_2_4;
+								else if( led_mode == led_mode_Max_2_4 && sewen_sub == 0 )
+									led_mode = led_mode_Max_3_4;
+								else if( led_mode == led_mode_Max_3_4 && sewen_sub == 0 )
+								{
+									led_mode = led_mode_Max_4_4;
+									sewen_sub = 1;
+								}
+								else if( led_mode == led_mode_Max_4_4 && sewen_sub == 1 )
+									led_mode = led_mode_Max_3_4;
+								else if( led_mode == led_mode_Max_3_4 && sewen_sub == 1 )
+									led_mode = led_mode_Max_2_4;
+								else if( led_mode == led_mode_Max_2_4 && sewen_sub == 1 )
+									led_mode = led_mode_Max_1_4;
+								else if( led_mode == led_mode_Max_1_4 && sewen_sub == 1 )
+								{
+									led_mode = 0;
+									sewen_sub = 0;
+								}
+								else //if( led_mode == led_mode_Max_1_4 && sewen_sub == 1 )
+								{
+									led_mode = 0;
+								//	sewen_sub = 0;
+								}
+							}
+						#if XL_key_2_long // #endif
+							IR_KEY_L_deal = 0;
+						#endif
+						#if XL_24C02		   
+							save_step = 1;//save_comval();
+						#endif
+					}
+					Key2_tick = 0;
+					#if XL_key_2_long // #endif
+						KEY_long_time_F2 = 0;
+					#endif
+				}
+			#endif
+		}
+		break;
+		case 1: //   
+		{
+		//	PAC    =  ~(T_Key1_mode   | T_Key2_mode );    //1:输出, 0:输入   PA7/1=input 
+		//	PAPH   =  T_Key1_mode | output_key1_mode | T_Key2_mode;
+			output_key1 = 0;
+			Delay10us();
+		//	Delay10us();
+		//	Delay10us();
+			juzheng_key_scan_step = 0;
+			
+			#if XL_key_3
+				if( T_Key3_Signal == 0 ) //  //  LED
+				{
+				//	juzheng_key_scan_step = 0;
+					if( Key3_tick >= key_long_time )  
+					{
+						Key3_tick  = key_long_time;
+
+						#if XL_key_3_long //  
+							if( KEY_long_time_F3 == 0 )
+							{	
+								KEY_long_time_F3 = 1;
+								//IR_KEY_L_deal = 201;
+							}
+						#endif
+					}
+				}
+				else
+				{
+					if (  Key3_tick >= Key_short_time   )  
+					{
+						//short_mode_init_F = 3;
+						#if XL_key_3_long // #endif
+							if ( KEY_long_time_F3 == 0 )
+						#endif
+							{
+								if( IR_LED_ON_F == 0  )
+									IR_LED_ON_F = 1;
+								else
+								{
+									IR_LED_ON_F = 0;
+								//	Time_mode   = 0;
+								}
+							}
+						#if XL_key_3_long // #endif
+							//IR_KEY_L_deal = 0;
+						#endif
+						#if XL_24C02		   
+							save_step = 1;//save_comval();
+						#endif
+					}
+
+					Key3_tick = 0;
+					#if XL_key_3_long // #endif
+						KEY_long_time_F3 = 0;
+					#endif
+				}
+			#endif
+
+			#if XL_key_4
+				if( T_Key4_Signal == 0 ) //  //  LED
+				{
+				//	juzheng_key_scan_step = 0;
+					if( Key4_tick >= key_long_time )  
+					{
+						Key4_tick  = key_long_time;
+
+						#if XL_key_4_long //  
+							if( KEY_long_time_F4 == 0 )
+							{	
+								KEY_long_time_F4 = 1;
+								IR_KEY_L_deal = 203;
+							}
+						#endif
+					}
+				}
+				else
+				{
+					if (  Key4_tick >= Key_short_time   )  
+					{
+						//short_mode_init_F = 1;
+						#if XL_key_4_long // #endif
+							if ( KEY_long_time_F4 == 0 )
+						#endif
+							{
+								short_key_sub();
+								IR_KEY_L_deal = 0;
+							}
+						#if XL_key_4_long // #endif
+							IR_KEY_L_deal = 0;
+						#endif
+						#if XL_24C02		   
+							save_step = 1;//save_comval();
+						#endif
+					}
+					Key4_tick = 0;
+					#if XL_key_4_long // #endif
+						KEY_long_time_F4 = 0;
+					#endif
+				}
+			#endif
+		break;
+		}
+/*
+		case 1:
+		{
+			output_key1 = 0;
+			Delay10us();
+	//		Delay10us();
+	//		Delay10us();
+			juzheng_key_scan_step = 0;
+			{
+				if ( !T_Key1_Signal || !T_Key2_Signal )//
+				{
+					if ( key2_tick >= key_short_time )
+					{
+						key1_tick = 0;
+						juzheng_key_scan_step = 1;
+						if (  T_Key1_Signal  == 0   ) 		  // 
+						{
+							key_F = 1;
+						//	if ( key1_tick >= key_short_time )
+							{
+								key2_tick = key_short_time;
+							}
+						}
+						else if (  T_Key2_Signal  == 0   )
+						{
+							if( IR_LED_ON_F  )
+							{
+
+								key_F = 3;
+								#if XL_key_2_long
+									if ( key2_tick >= key_long_time )
+									{
+										key2_tick = key_long_time;
+										KEY_long_time_F2 = 1;
+										IR_KEY_L_deal = 203;
+									}
+								#endif
+							}
+						}
+					}
+				}
+				else
+				{
+					if ( key2_tick >= key_short_time )// ||  key4_tick >= key_short_time
+					{
+						short_mode_init_F = 1;
+						
+						switch( key_F )
+						{
+							case 1: //   
+								if( IR_LED_ON_F == 0  )
+									IR_LED_ON_F = 1;
+								else
+								{
+									IR_LED_ON_F = 0;
+								//	Time_mode   = 0;
+								}
+								break;
+							case 3:
+								if( IR_LED_ON_F  )
+								{
+									#if XL_key_2_long
+										if( KEY_long_time_F2 == 0 )
+									#endif
+										{
+											short_key_sub();
+											IR_KEY_L_deal = 0;
+										}
+								}
+
+								break;
+							default:
+								break;
+						}
+						IR_KEY_L_deal = 0;
+						#if XL_24C02
+						    save_step = 1;//save_comval();
+						#endif
+						key_F = 0;
+					}
+#if XL_key_2_long
+					KEY_long_time_F2 = 0;
+#endif
+				//	key1_tick = 0;
+					key2_tick = 0;
+				//	key3_tick = 0;
+				}
+			}
+		}
+		break;*/
+		default:
+			break;
+	}
+}
+
+#endif

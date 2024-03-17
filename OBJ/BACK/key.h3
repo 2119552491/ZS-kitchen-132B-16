@@ -1,0 +1,7 @@
+
+
+extern bit KEY_long_time_F1;
+
+extern byte key1_tick;
+
+extern void T_Key1_Func(void); //  on -  off

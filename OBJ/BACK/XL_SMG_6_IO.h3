@@ -1,0 +1,342 @@
+
+#define XL_SMG_6_IO 		 0
+
+
+#define XL_SMG_gong_ying 	 0
+#define SMG_time			 1
+#define yiweisu 0
+#define liangweisu 1
+#define XL_SMG_gong_ying 	 0
+#define SMG_6_IO_time			 2
+#define yiweisu 0
+#define liangweisu 1
+
+
+#define SMG_1 		   	   PB.1
+#define SMG_1_mode 		   0x02//PA.6
+#define SMG_1_modeC       PBC.1// 0x20//PA.7
+
+#define SMG_2 		   	   PB.0 // pb.3
+#define SMG_2_mode 		   0x01//PA.7
+#define SMG_2_modeC       PBC.0// 0x20//PA.7
+
+
+#define SMG_3		   	   PB.2//PA.7
+#define SMG_3_mode 		   0x04//PA.5  //
+#define SMG_3_modeC       PBC.2// 0x20//PA.7
+
+#define SMG_4 		   	   PB.5  // 
+#define SMG_4_mode		   0x20//PA.0//PA.7
+#define SMG_4_modeC       PBC.5// 0x20//PA.7
+
+#define SMG_5 		   	   PB.4 
+#define SMG_5_mode 		   0x10//PA.4 // pb.3
+#define SMG_5_modeC       PBC.4// 0x20//PA.7
+
+#define SMG_6 		   	   PA.5
+#define SMG_6_mode 		   0x20//PA.3
+#define SMG_6_modeC       PAC.5// 0x20//PA.7
+
+
+#define _SMG_xiaoying		 11
+#define _SMG_o			     12
+#define _SMG_p			     13
+#define _SMG_n			     14
+#define _SMG_f			     15// default
+
+extern byte SMG_step2;
+extern void SMG_byte_to_suzhu( byte SMG_byte ); 
+extern byte SMG_1_F;
+
+extern byte SMG_xiaoying_F;
+
+extern byte SMG_temp_count;
+
+extern byte SMG_mode;
+extern word point_data_address;
+//extern word point_data_address1;
+//extern byte SMG_IO_Num , SMG_IO_Num1 , SMG_IO_Num2 , SMG_IO_Num3 , SMG_IO_Num4 ;
+
+extern byte SMG_weishu_num[4];
+extern byte SMG_weishu_num_dingshi[4];
+extern byte SMG_weishu_num_temp[4];
+extern byte SMG_weishu_num_dingshi_on_off[4];
+
+
+extern byte SMG_qianwei_num ,SMG_baiwei_num  ,SMG_shiwei_num , SMG_gewei_num;
+extern byte SMG_qianwei_num_dingshi ,SMG_baiwei_num_dingshi  ,SMG_shiwei_num_dingshi , SMG_gewei_num_dingshi;
+
+extern byte SMG_step; 
+//extern byte SMG_gewei_step; 
+extern byte SMG_gewei_num;
+extern byte SMG_shiwei_num;
+extern byte SMG_display_num;
+///extern byte SMG_shiwei_50us_time_count;
+extern byte SMG_mode;
+extern void SMG_display_out(); //
+extern void SMG_add_range_deal();
+extern void SMG_sub_range_deal();
+extern void SMG_naozhong_on_off();
+extern void SMG_display3();
+
+
+extern void SMG_abcdefg_value_get();
+
+ 
+extern void SMG_display_6_step();
+
+extern byte SMG_gewei_num;
+extern byte SMG_shiwei_num;
+extern byte SMG_display_num;
+extern byte SMG_shiwei_50us_time_count;
+extern byte SMG_num;
+extern void SMG_display_out(); //
+
+#if 0 
+void SMG_display()
+{
+//	if (SMG_shiwei_50us_time_count >= SMG_6_IO_time)
+//	{
+		SMG_step++;
+	//	PB = 0x00;
+		
+		SMG_1 = 1;
+		SMG_2 = 1;
+		SMG_3 = 1;
+		SMG_4 = 1;
+		SMG_5 = 1;
+		SMG_6 = 1;
+
+		SMG_1_modeC = IO_INput_mode;// input IO_Output_mode
+		SMG_2_modeC = IO_INput_mode;
+		SMG_3_modeC = IO_INput_mode;
+		SMG_4_modeC = IO_INput_mode;
+		SMG_5_modeC = IO_INput_mode;
+		SMG_6_modeC = IO_INput_mode;
+	if( SMG_step2 == 1 )
+	{
+		if( SMG_step == 1 )
+		{
+			if (SMG_IO_Num[0] & 0x01 )// == 1
+			{
+				SMG_3    	=0;//
+				SMG_3_modeC =IO_Output_mode;//
+				SMG_2    	=1;//
+				SMG_2_modeC =IO_Output_mode;//
+			}
+		}
+		else if( SMG_step == 2 )
+		{
+			if (SMG_IO_Num[0] & 0x02 )// == 1
+			{
+				SMG_4    	=0;//
+				SMG_4_modeC =IO_Output_mode;//
+				SMG_2    	=1;//
+				SMG_2_modeC =IO_Output_mode;//
+			}
+		}
+		else if( SMG_step == 3 )
+		{
+			if (SMG_IO_Num[0] & 0x04 )// == 1
+			{
+				SMG_2    	=0;//
+				SMG_2_modeC =IO_Output_mode;//
+				SMG_5    	=1;//
+				SMG_5_modeC =IO_Output_mode;//
+			}
+		}
+		else if( SMG_step == 4 )
+		{
+			if (SMG_IO_Num[0] & 0x08 )// == 1
+			{
+				SMG_6    	=0;//
+				SMG_6_modeC =IO_Output_mode;//
+				SMG_2    	=1;//
+				SMG_2_modeC =IO_Output_mode;//
+			}
+		}
+		else if( SMG_step == 5 )
+		{
+			if (SMG_IO_Num[0] & 0x10 )// == 1
+			{
+				SMG_5    	=0;//
+				SMG_5_modeC =IO_Output_mode;//
+				SMG_2    	=1;//
+				SMG_2_modeC =IO_Output_mode;//
+			}
+		}
+		else if( SMG_step == 6 )
+		{
+			if (SMG_IO_Num[0] & 0x20 )// == 1
+			{
+				SMG_2    	=0;//
+				SMG_2_modeC =IO_Output_mode;//
+				SMG_3    	=1;//
+				SMG_3_modeC =IO_Output_mode;//
+			}
+		}
+		else if( SMG_step == 7 )
+		{
+			if (SMG_IO_Num[0] & 0x40 )// == 1
+			{
+				SMG_2    	=0;//
+				SMG_2_modeC =IO_Output_mode;//
+				SMG_4    	=1;//
+				SMG_4_modeC =IO_Output_mode;//
+			}
+			SMG_step = 0;
+			SMG_step2++;
+		}
+	}
+	else if( SMG_step2 == 2 )
+	{
+		if( SMG_step == 1 )
+		{
+			if (SMG_IO_Num[1] & 0x01 )// == 1
+			{
+				SMG_4    	=0;//
+				SMG_4_modeC =IO_Output_mode;//
+				SMG_5    	=1;//
+				SMG_5_modeC =IO_Output_mode;//
+			}
+		}
+		else if( SMG_step == 2 )
+		{
+			if (SMG_IO_Num[1] & 0x02 )// == 1
+			{
+				SMG_5    	=0;//
+				SMG_5_modeC =IO_Output_mode;//
+				SMG_3    	=1;//
+				SMG_3_modeC =IO_Output_mode;//
+			}
+		}
+		else if( SMG_step == 3 )
+		{
+			if (SMG_IO_Num[1] & 0x04 )// == 1
+			{
+				SMG_5    	=0;//
+				SMG_5_modeC =IO_Output_mode;//
+				SMG_4    	=1;//
+				SMG_4_modeC =IO_Output_mode;//
+			}
+		}
+		else if( SMG_step == 4 )
+		{
+			if (SMG_IO_Num[1] & 0x08 )// == 1
+			{
+				SMG_4    	=0;//
+				SMG_4_modeC =IO_Output_mode;//
+				SMG_3    	=1;//
+				SMG_3_modeC =IO_Output_mode;//
+			}
+		}
+		else if( SMG_step == 5 )
+		{
+			if (SMG_IO_Num[1] & 0x10 )// == 1
+			{
+				SMG_3    	=0;//
+				SMG_3_modeC =IO_Output_mode;//
+				SMG_6    	=1;//
+				SMG_6_modeC =IO_Output_mode;//
+			}
+		}
+		else if( SMG_step == 6 )
+		{
+			if (SMG_IO_Num[1] & 0x20 )// == 1
+			{
+				SMG_3    	=0;//
+				SMG_3_modeC =IO_Output_mode;//
+				SMG_4    	=1;//
+				SMG_4_modeC =IO_Output_mode;//
+			}
+		}
+		else if( SMG_step == 7 )
+		{
+			if (SMG_IO_Num[1] & 0x40 )// == 1
+			{
+				SMG_3    	=0;//
+				SMG_3_modeC =IO_Output_mode;//
+				SMG_5    	=1;//
+				SMG_5_modeC =IO_Output_mode;//
+			}
+			SMG_step = 0;
+			SMG_step2++;
+		}
+	}
+	else if( SMG_step2 == 3 )
+	{
+		if( SMG_step == 1 )
+		{
+			if (SMG_IO_Num[2] & 0x01 )// == 1
+			{
+				SMG_6    	=0;//
+				SMG_6_modeC =IO_Output_mode;//
+				SMG_1    	=1;//
+				SMG_1_modeC =IO_Output_mode;//
+			}
+		}
+		else if( SMG_step == 2 )
+		{
+			if (SMG_IO_Num[2] & 0x02 )// == 1
+			{
+				SMG_6    	=0;//
+				SMG_6_modeC =IO_Output_mode;//
+				SMG_3    	=1;//
+				SMG_3_modeC =IO_Output_mode;//
+			}
+		}
+		else if( SMG_step == 3 )
+		{
+			if (SMG_IO_Num[2] & 0x04 )// == 1
+			{
+				SMG_6    	=0;//
+				SMG_6_modeC =IO_Output_mode;//
+				SMG_5    	=1;//
+				SMG_5_modeC =IO_Output_mode;//
+			}
+		}
+		else if( SMG_step == 4 )
+		{
+			if (SMG_IO_Num[2] & 0x08 )// == 1
+			{
+				SMG_4    	=0;//
+				SMG_4_modeC =IO_Output_mode;//
+				SMG_6    	=1;//
+				SMG_6_modeC =IO_Output_mode;//
+			}
+		}
+		else if( SMG_step == 5 )
+		{
+			if (SMG_IO_Num[2] & 0x10 )// == 1
+			{
+				SMG_6    	=0;//
+				SMG_6_modeC =IO_Output_mode;//
+				SMG_4    	=1;//
+				SMG_4_modeC =IO_Output_mode;//
+			}
+		}
+		else if( SMG_step == 6 )
+		{
+			if (SMG_IO_Num[2] & 0x20 )// == 1
+			{
+				SMG_5    	=0;//
+				SMG_5_modeC =IO_Output_mode;//
+				SMG_6    	=1;//
+				SMG_6_modeC =IO_Output_mode;//
+			}
+		}
+		else if( SMG_step == 7 )
+		{
+			if (SMG_IO_Num[2] & 0x40 )// == 1
+			{
+				SMG_5    	=0;//
+				SMG_5_modeC =IO_Output_mode;//
+				SMG_1    	=1;//
+				SMG_1_modeC =IO_Output_mode;//
+			}
+			SMG_step = 0;
+			SMG_step2 = 1;
+		}
+	}
+}
+#endif

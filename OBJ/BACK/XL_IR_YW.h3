@@ -1,0 +1,266 @@
+
+
+#define IR_Long_key 	  	   0
+#define XL_Wuxian 			   1
+#define XL_wuxian_IR      	   0    //4
+#define XL_wuxian_IR_long_key  0    //4
+#define XL_wuxian_433      	   1    //4
+
+
+#define XL_wuxian_cabiao       0    //4
+
+#define IR_KEY_L_ON_OFF 	0
+
+#define IR_KEY_L_ON 	   			0x01//0x40
+#define IR_KEY_L_OFF 	   		 	0x03//0x11//0x41
+
+#define led_mode_add_key			0x09
+
+#define IR_KEY_L_dingshi_60_min 	0x05//0x16
+#define IR_KEY_L_dingshi_30_min 	0x05//0x16
+
+#define IR_KEY_L_user_color 		0x04//0x16  CCT
+
+#define IR_KEY_L_user_color1 		0x06//0x16  CCT
+#define IR_KEY_L_user_color2 		0x07//0x16  CCT
+#define IR_KEY_L_user_color3 		0x08//0x16  CCT
+#define IR_KEY_L_user_color4 		0x09//0x16  CCT
+#define IR_KEY_L_user_color5 		0x10//0x16  CCT
+
+#define IR_KEY_L_color_add 			0x22//0x16
+#define IR_KEY_L_color_sub 			0x21//0x12
+
+#define IR_KEY_L_levle_add 			0x11//0x5C
+#define IR_KEY_L_levle_sub 			0x12//0x5D
+
+#define IR_KEY_L_speed_add 			0x16
+#define IR_KEY_L_speed_sub 			0x13
+
+
+
+#define IR_in      		   		PB.6    //4
+#define IR_in_mode   	   		0x40//PAC.5    //4
+//#define IR_in_Pull_mode    PAPH.5    //4
+
+
+void IR_DECODE();
+void IR_KEY_DEAL();
+
+extern byte IR_KEY_L;
+extern byte IR_KEY_L1;
+extern byte IR_SETP;
+extern byte ir_long_tick;
+extern byte ADDR_H;
+extern bit ir_err_f;
+extern bit IR_H_F;
+extern bit ir_repeat_f;
+extern byte ADDR_L;
+extern byte IR_KEY_L_deal;
+extern byte ir_tick_1ms;
+extern byte ir_tick;
+extern bit ir_ok_F;
+extern bit ir_deal_F;
+extern bit ir_end_F;
+//extern byte IR_KEY_F;
+extern byte ir_count;
+//extern byte IR_KEY_L_deal;
+
+extern byte IR_LED_ON_F;
+extern void IR_Key_Color_Table();
+//bit ir_long_key_speed_add_F;
+//bit ir_long_key_light_add_F;
+//extern bit ir_long_key_num_add_F;
+
+//extern byte IR_KEY_L_deal;
+
+
+
+#if 0 
+		disgint;
+#if XL_wuxian_cabiao
+		while(1)
+		{
+			key_loop_time++;
+			a = key_loop_time;
+			IR_Key_Table();
+			if(IR_KEY_L==a)
+			{
+/*
+				XL_temp_count = Color_mode_RGB_Max;
+				XL_temp_count = RTC_mode_Max;
+				XL_temp_count = MIC_mode_Max;
+				XL_temp_count = RTC_mode_auto_Max;
+*/
+					 if( key_loop_time <= Color_mode_RGB_Max + RTC_mode_Max + MIC_mode_Max   )
+				{
+					led_mode = key_loop_time;
+
+#if RTC_mode_auto_Max
+					if( led_mode == Color_mode_RGB_Max + RTC_mode_Max  )// MIC_mode_Max +
+					{
+						RTC_mode_auto_first_F = 0;//RTC_mode = 1;
+					}
+#endif
+
+#if XL_music_mode_led_Flash_warning
+					if( led_mode >= Color_mode_RGB_Max + RTC_mode_Max )
+					{
+						Flash_warning  = LED_Flash_time;// LED_Flash_time
+					}
+#endif
+				}
+#if XL_Sleep_time
+				else if( key_loop_time <=  Color_mode_RGB_Max + RTC_mode_Max + MIC_mode_Max  + 4 )
+				{
+					sleep_mode_init_F = 1;
+					Time_mode         = key_loop_time - ( Color_mode_RGB_Max + RTC_mode_Max + MIC_mode_Max );
+
+#if XL_Sleep_led_Flash_warning
+					Flash_warning = LED_Flash_time;
+#endif
+				}
+#endif
+
+#if XL_level_zdy
+				else if( key_loop_time <=  Color_mode_RGB_Max + RTC_mode_Max + MIC_mode_Max  + 4 + 4 )
+				{
+					led_level = 0;
+					key_loop_time = key_loop_time - ( Color_mode_RGB_Max + RTC_mode_Max + MIC_mode_Max   + 4 );
+					while( key_loop_time -- )
+						led_level += led_level_1_4_Max;
+				}
+#endif
+				break;
+			}
+			XL_temp_count = Color_mode_RGB_Max + RTC_mode_Max + MIC_mode_Max  + 4 + 4 ;
+			if(key_loop_time >= Color_mode_RGB_Max + RTC_mode_Max + MIC_mode_Max + 4 + 4  )
+			{
+				nop;
+				break;
+			}
+		}
+#endif
+		switch( IR_KEY_L )
+		{                  
+			case led_mode_add_key:  //0x0C  IR_KEY_L_speed_add
+				led_mode++;
+
+				break;   
+#if led_speed_add_sub 
+			case IR_KEY_L_levle_add:  //0x0C  IR_KEY_L_speed_add
+				short_key_add();
+#endif
+				//IR_KEY_L_deal = 200; 
+#if 0//IR_Long_key
+
+				ir_deal_F = 0;  
+				if(ir_count >= ir_count_repeat - 1) //
+				{
+					IR_KEY_L_deal  = 201;
+				}
+
+#endif
+				break;   
+#if level_add_sub
+			case IR_KEY_L_levle_sub: //   0x0B
+				short_key_sub();
+#endif
+				//IR_KEY_L_deal = 202; 
+
+#if 0//IR_Long_key
+
+				ir_deal_F = 0;       
+				if(ir_count >= ir_count_repeat - 1) //
+				{
+					IR_KEY_L_deal  = 203;
+				}
+
+#endif
+				break;  
+		}
+		engint;
+#endif
+
+
+#if 0//IR_Long_key
+void IR_Key_Table()
+{
+	a += 1;
+	pcadd a;
+	ret 0
+
+	ret 0x58  	// 
+	ret 0x54 
+	ret 0x50 
+	ret 0x1C
+	ret 0x18
+
+	ret 0x59
+	ret 0X55  	// 2
+	ret 0x51 
+	ret 0x1D 
+	ret 0x19
+
+	ret 0x45
+	ret 0x49   	// 3
+	ret 0X4D
+	ret 0x1E
+	ret 0x1A
+
+	ret 0x44	//16
+
+	ret 0x48  	// 17
+	ret 0x4C 	// 18
+	ret 0X1F	//19	
+	ret 0x1B	//20
+
+	ret 0x15	// JUMP3	
+	ret 0x11	// JUMP7
+	ret 0x0d	// FADE3
+	ret 0x09	// FADE7
+
+	ret 0x0a	// FLASH
+
+	ret 0x0E	// AUTO
+
+	ret 0x06	// MUSIC3
+	ret 0x07	// MUSIC4
+	ret 0x05	// MUSIC2
+	ret 0x04	// MUSIC1	
+
+
+	ret 0x14	// Dingshi_1	
+	ret 0x10	// Dingshi_2
+	ret 0x0c	// Dingshi_3
+	ret 0x08	// Dingshi_4
+
+	ret 0x17	// level_25	
+	ret 0x13	// level_50
+	ret 0x0F	// level_75
+	ret 0x0B	// level_100
+
+
+/*
+	ret 0x17
+	ret 0x12
+	ret 0x40
+
+	ret 0x4C
+	ret 0x0A
+	ret 0x1E
+
+
+
+
+	ret 0x19
+	ret 0x1b
+	ret 0x11
+
+	ret 0x1C
+	ret 0x16
+	ret 0x04
+
+	ret 0xFF
+*/
+}
+#endif

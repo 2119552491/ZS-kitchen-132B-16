@@ -1,0 +1,157 @@
+
+#include "XL_common.h"
+
+#if XL_HC_RGB_fade		   
+
+
+void LED_3_Fade_Mode_TABLE();
+void LED_7_Fade_Mode_TABLE(); 
+
+
+void HC_LED_7_Fade_Mode(); 
+/*
+void LED_3_Fade_Mode() // RTC_1ms_tick && LED_Flash_warning_F == 0
+{
+	if( Led_time_50us_tick >= led_speed  )  // Led_time_1ms_tick ON_F && IR_MIC_F == 2 22 
+	{
+		Led_time_50us_tick= 0;
+		time_led_speed_ms_tick++;	// time_LED_LEVEL_Max_tick Led_time_1ms_tick
+
+		XL_temp_count = Time_Count;
+		LED_3_Fade_Mode_TABLE();
+
+		if ( time_led_speed_ms_tick >=  led_level_Max  ) // 255 led_speed_Max led_level LED_LEVEL_Max RTC_mode_15_count
+		{
+			time_led_speed_ms_tick = 0;
+			Time_Count++;
+			if( Time_Count >= 4 )
+				Time_Count = 1;
+		}
+	}
+}
+*/
+void HC_LED_7_Fade_Mode() // RTC_1ms_tick && LED_Flash_warning_F == 0
+{
+	if( Led_time_50us_tick >=  3 )  // 150 Led_time_1ms_tick ON_F && IR_MIC_F == 2 22 
+	{
+		Led_time_50us_tick= 0;
+		time_led_speed_ms_tick++;	// time_LED_LEVEL_Max_tick Led_time_1ms_tick
+
+		XL_temp_count = Time_Count;
+		LED_7_Fade_Mode_TABLE();
+		send_all_byte();
+		if ( time_led_speed_ms_tick >=  led_level_Max  ) //  255 led_speed_Max led_level LED_LEVEL_Max RTC_mode_15_count
+		{
+			time_led_speed_ms_tick = 0;
+			Time_Count++;
+			if( Time_Count >= 9 )
+				Time_Count = 2;
+		}
+	}
+}
+
+void LED_7_Fade_Mode_TABLE()//0-RG-G-GB-B-RGB-RB-R-RG
+{
+	switch(XL_temp_count)
+	{
+		case 1: 
+			LED_R_PWM_expect ++;
+			LED_G_PWM_expect ++;
+			break;
+		case 2:
+			LED_R_PWM_expect --;
+			break;
+		case 3:
+			LED_B_PWM_expect ++;
+			
+			break;
+		case 4:
+			//LED_R_PWM_expect --;	
+			LED_G_PWM_expect --;
+			break;
+		case 5:
+			LED_R_PWM_expect ++;
+			LED_G_PWM_expect ++;
+			break;
+		case 6:
+			LED_G_PWM_expect --;
+			break;
+		case 7:
+			LED_B_PWM_expect --;
+			break;
+		case 8:
+			LED_G_PWM_expect ++;
+			break;
+		default:
+			break;
+	}
+}
+
+
+/*
+void LED_7_Fade_Mode_TABLE()// R-G-B-RG-GB-RB-RGB
+{
+	switch( XL_temp_count )
+	{
+		case 1:
+			LED_R_PWM_expect --;
+			LED_G_PWM_expect ++;
+			//LED_B_PWM_expect --;
+			break;
+		case 2:
+			//LED_R_PWM_expect --;
+			LED_G_PWM_expect --; 
+			LED_B_PWM_expect ++;
+			break;
+		case 3:
+			LED_R_PWM_expect ++;
+			LED_G_PWM_expect ++;
+			LED_B_PWM_expect --;
+			break;
+		case 4:
+			LED_R_PWM_expect --;
+			//LED_G_PWM_expect --; 
+			LED_B_PWM_expect ++;
+			break;
+		case 5:
+			LED_R_PWM_expect ++; 
+			LED_G_PWM_expect --; 
+			//LED_B_PWM_expect --;
+			break; 
+		case 6:
+			//LED_R_PWM_expect ++; 
+			LED_G_PWM_expect ++; 
+			//LED_B_PWM_expect --;
+			break; 
+		case 7:
+			//LED_R_PWM_expect ++; 
+			LED_G_PWM_expect --; 
+			LED_B_PWM_expect --;
+			break; 
+	}
+}
+
+
+void LED_3_Fade_Mode_TABLE()// R-G-B
+{
+	switch( XL_temp_count )
+	{
+		case 1:
+			LED_R_PWM_expect --;
+			LED_G_PWM_expect ++;
+			//LED_B_PWM_expect --;
+			break;
+		case 2:
+			//LED_R_PWM_expect --;
+			LED_G_PWM_expect --; 
+			LED_B_PWM_expect ++;
+			break;
+		case 3:
+			LED_R_PWM_expect ++; 
+			//LED_G_PWM_expect --; 
+			LED_B_PWM_expect --;
+			break;   
+	}
+}
+*/
+#endif

@@ -1,0 +1,116 @@
+
+#include "XL_common.h"
+
+#if XL_RTC_candle
+
+bit decrease_F;
+
+
+void LED_candle();
+
+void XL_RGB_candle_table();  // ON 0x07 dynamic
+
+
+void LED_candle()
+{
+   	if( Led_time_50us_tick >= 20 )  // ON_F && IR_MIC_F == 2
+   	{
+   	   	Led_time_50us_tick=0;
+   	   	time_led_speed_ms_tick++;  	// time_LED_LEVEL_Max_tick Led_time_50us_tick
+
+   	   	///////////////////////////////////////////////////////////////////////
+   	   	if (time_led_speed_ms_tick >= 1) // led_speed_Max LED_LEVEL_Max
+   	   	{
+			time_led_speed_ms_tick=0;
+
+			if (  Time_Count == 1 ) // || Time_Count == Time_Count_temp
+			{
+				//word XL_diael;
+
+				a = temp_byte_value + 1;   
+				XL_RGB_candle_table(); 
+				Time_Count  = a + 1;  
+
+
+				Time_Count = Time_Count<<2;
+
+				temp_byte_value++;
+
+				if( temp_byte_value >= 34 )
+					temp_byte_value = 0;
+				
+				if ( decrease_F == 1 )   
+					decrease_F = 0;
+				else
+					decrease_F = 1;
+			}
+
+			if ( decrease_F == 1 ) 
+			{
+				LED_R_PWM_expect -=1;
+			}
+			else
+			{
+				LED_R_PWM_expect +=1;
+			}
+			Time_Count--;
+
+
+			LED_G_PWM_expect = LED_R_PWM_expect>>2;
+			send_all_byte();
+
+		}
+	}
+}
+
+void XL_RGB_candle_table()  // ON 0x07 dynamic
+{
+	a += 1;
+	pcadd a;	// 0x05 add_key  Led_mdoe = 1
+
+	ret 0 	// 75
+// A:
+	ret 7 	// 75
+	ret 7 	// 75
+	ret 13 	// 75
+	ret 4 	// 75
+	ret 4 	// 75
+
+	ret 4 	// 75
+	ret 10 	// 75
+	ret 7 	// 75	ret 7 	// 75
+	ret 20 	// 75
+	ret 8 	// 75
+
+	ret 4 	// 75	ret 7 	// 75
+	ret 16 	// 75
+	ret 4 	// 75
+	ret 16 	// 75  14
+// B:
+	ret 10 	// 75
+	ret 4 	// 75
+	ret 32 	// 75
+	ret 17 	// 75	ret 7 	// 75
+	ret 14 	// 75
+
+	ret 23 	// 75
+	ret 7 	// 75
+	ret 19 	// 75 14 + 8
+// C:
+	ret 31 	// 75
+	ret 7 	// 75
+	ret 13 	// 75	ret 7 	// 75
+	ret 34 	// 75
+	ret 22 	// 75
+
+	ret 25 	// 75	ret 7 	// 75
+// E:
+	ret 16 	// 75
+	ret 16 	// 75
+// F:
+	ret 13 	// 75
+	ret 7 	// 75
+	ret 13 	// 75
+	ret 19 	// 75   14 + 8 + 5 + 1 + 2 + 4
+}
+#endif

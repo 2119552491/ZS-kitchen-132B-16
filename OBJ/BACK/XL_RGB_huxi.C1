@@ -1,0 +1,186 @@
+
+#include "XL_common.h"
+
+#if XL_RTC_huxi	| XL_RTC_MIC_huxi	   
+
+bit decrease_F;
+
+void LED_3_huxi_Mode_TABLE();
+void LED_7_huxi_Mode_TABLE(); 
+
+void LED_3_huxi_Mode();
+void LED_7_huxi_Mode(); 
+/*
+void LED_3_huxi_Mode() // RTC_1ms_tick && LED_Flash_warning_F == 0
+{
+	if( Led_time_50us_tick >= led_speed  )  // Led_time_1ms_tick ON_F && IR_MIC_F == 2 22 
+	{
+		Led_time_50us_tick= 0;
+		time_led_speed_ms_tick++;	// time_LED_LEVEL_Max_tick Led_time_1ms_tick
+
+		XL_temp_count = Time_Count;
+		LED_7_huxi_Mode_TABLE();
+
+		if ( time_led_speed_ms_tick >=  led_level_Max  ) // 255 led_speed_Max led_level LED_LEVEL_Max RTC_mode_15_count
+		{
+			time_led_speed_ms_tick = 0;
+			Time_Count++;
+			if( decrease_F )
+				decrease_F = 0;
+			else
+				decrease_F = 1;
+			if( Time_Count >= 3+1 )
+				Time_Count = 1;
+		}
+	}
+}
+*/
+
+
+/*
+						#if XL_RTC_huxi	| XL_RTC_MIC_huxi | XL_RTC_MIC_Flash | XL_RTC_Flash
+
+						#endif
+*/
+
+void LED_7_huxi_Mode() // RTC_1ms_tick && LED_Flash_warning_F == 0
+{
+/*
+	if(  MIC_10ms_tick >= MIC_10ms_tick_NUM )
+	{
+		Led_time_1ms_tick 	   = 0;
+		time_led_speed_ms_tick = 0;
+
+		decrease_F 		  		  = 1;
+	}
+*/
+	if( Led_time_1ms_tick >= led_speed  )  //    ON_F && IR_MIC_F == 2 22  Led_time_50us_tick
+	{
+		Led_time_1ms_tick = 0;
+
+	//	led_speed_temp++;
+	//	if( led_speed_temp >= led_speed_temp_adjust )
+		{
+	//		led_speed_temp = 0;
+			time_led_speed_ms_tick++;	// time_LED_LEVEL_Max_tick Led_time_1ms_tick
+
+			XL_temp_count = Time_Count;
+			LED_7_huxi_Mode_TABLE();
+		}
+
+		if ( time_led_speed_ms_tick >=  led_level_Max  ) // led_level_Max 255 led_speed_Max led_level LED_LEVEL_Max RTC_mode_15_count
+		{
+			time_led_speed_ms_tick = 0;
+
+			if( decrease_F )
+			{
+				decrease_F = 0;
+				Time_Count++;
+				if( Time_Count >= 7 + 1 )
+				{
+					Time_Count = 1;
+				}
+/*
+				if( RTC_mode == 8 )
+				{
+					if( Time_Count == 1 )
+						Time_Count = 2;
+					else
+						Time_Count = 1;
+				}
+				else if( RTC_mode == 9 )
+				{
+					if( Time_Count == 1 )
+						Time_Count = 3;
+					else
+						Time_Count = 1;
+				}
+				else if( RTC_mode == 10 )
+				{
+					if( Time_Count == 3 )
+						Time_Count = 2;
+					else
+						Time_Count = 3;
+				}
+*/				
+			}
+			else
+				decrease_F = 1;
+		}
+	}
+}
+void LED_7_huxi_Mode_TABLE()// R-G-B-RG-GB-RB-RGB
+{
+	switch( XL_temp_count )
+	{
+		case 1:
+			if( decrease_F == 0 )
+				LED_R_PWM_expect ++;
+			else
+				LED_R_PWM_expect --;
+			break;
+		case 2:
+			if( decrease_F == 0 )
+				LED_G_PWM_expect ++;
+			else
+				LED_G_PWM_expect --;
+			break;
+		case 3: 
+			if( decrease_F == 0 )
+				LED_B_PWM_expect ++;
+			else
+				LED_B_PWM_expect --;
+			break;  
+		case 4: 
+			if( decrease_F == 0 )
+			{
+				LED_R_PWM_expect ++;
+				LED_G_PWM_expect ++;
+			}
+			else
+			{
+				LED_R_PWM_expect --;
+				LED_G_PWM_expect --;
+			}
+			break;   
+		case 5: 
+			if( decrease_F == 0 )
+			{
+				LED_G_PWM_expect ++;
+				LED_B_PWM_expect ++;
+			}
+			else
+			{
+				LED_G_PWM_expect --;
+				LED_B_PWM_expect --;
+			}
+			break;   
+		case 6: 
+			if( decrease_F == 0 )
+			{
+				LED_R_PWM_expect ++;
+				LED_B_PWM_expect ++;
+			}
+			else
+			{
+				LED_R_PWM_expect --;
+				LED_B_PWM_expect --;
+			}
+			break; 
+		case 7:
+			if( decrease_F == 0 )
+			{
+				LED_R_PWM_expect ++;
+				LED_G_PWM_expect ++;
+				LED_B_PWM_expect ++;
+			}
+			else
+			{
+				LED_R_PWM_expect --;
+				LED_G_PWM_expect --;
+				LED_B_PWM_expect --;
+			}
+			break;
+	}
+}
+#endif

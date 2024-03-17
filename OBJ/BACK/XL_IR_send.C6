@@ -1,0 +1,83 @@
+#include "XL_common.h"
+
+#if XL_IR_send
+
+void Delay400us(void)
+{
+	word i=200;
+	while(i--)
+	{
+		nop;
+	}
+}
+
+void Delay600us(void)
+{
+	word i=300;
+	while(i--)
+	{
+		nop;
+	}
+}
+
+void Delay1500us(void)
+{
+	word i=750;
+	while(i--)
+	{
+		nop;
+	}
+}
+
+void Delay5ms()
+{
+	
+	word i1=2500;
+	while(i1--)
+	{
+		nop;
+	}
+	
+}
+ 
+void IR_send_one_byte()
+{
+	byte send_long = 8;
+
+SEND_BYTE1_LOOP:
+
+	if( send_long )
+	{
+		if( led_level_temp & 0x01 )
+			GOTO SEND_BYTE1_BIT_H;
+	}
+	else
+		return;
+
+SEND_BYTE1_BIT_L:
+
+	WS2812_IO = 0;// 750ns
+	Delay600us();
+
+	WS2812_IO = 1;// 250ns
+	Delay400us();
+
+	led_level_temp = led_level_temp>>1;
+	send_long--;
+	GOTO SEND_BYTE1_LOOP;
+
+SEND_BYTE1_BIT_H:
+
+	WS2812_IO = 0;// 750ns  
+	Delay600us();
+
+	WS2812_IO = 1;// 250ns
+	Delay1500us();
+
+	led_level_temp = led_level_temp>>1;
+	send_long--;
+	GOTO SEND_BYTE1_LOOP;
+
+}
+
+#endif

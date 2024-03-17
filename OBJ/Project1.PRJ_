@@ -1,0 +1,42 @@
+[Ram_Break]
+Break1=No 0000
+Break2=No 0000
+Break3=No 0000
+Break4=No 0000
+[Stack_Break]
+Break1=Au 0000 00FF
+Break2=Au 0000 00FF
+Break3=Au 0000 00FF
+Break4=Au 0000 00FF
+Break5=Au 0000 00FF
+Break6=Au 0000 00FF
+Break7=Au 0000 00FF
+Break8=Au 0000 00FF
+[Ctrl_Break]
+Mark=41 1
+ICE=0 6 2 BB8
+[INI]
+PROJECT=PRE_FILE
+[LINKS]
+~Project1.C
+~IR.C
+~TAB.C
+~I2C24C02.C
+~PWM.C
+~key.C
+~AD.C
+[HEAD]
+~extern.h
+~IR.h
+~TAB.h
+~I2C24C02.h
+~common.h
+~PWM.h
+~key.h
+~AD.h
+[DEPEND]
+~$:INC_PDK\PFS122.INC
+~Project1.PRE
+[PRE]
+~Project1.PRJ
+~Project1.PRE

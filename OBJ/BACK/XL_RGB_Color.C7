@@ -1,0 +1,300 @@
+
+#include "XL_common.h"
+
+byte led_mode;
+byte led_level;
+byte RTC_led_level; 
+byte led_level_temp;
+byte temp_byte_value;
+word XL_temp_count;
+
+#if RGB_Color
+
+//byte led_mode_RGB;
+byte Color_mode;
+byte RTC_mode;
+
+byte LED_R_PWM_expect;
+byte LED_G_PWM_expect;
+byte LED_B_PWM_expect;
+
+/*
+byte LED_R_PWM_expect_fade;
+byte LED_G_PWM_expect_fade;
+byte LED_B_PWM_expect_fade;
+*/
+byte LED_R_PWM_temp;
+byte LED_G_PWM_temp;
+byte LED_B_PWM_temp;
+
+byte led_speed;
+byte led_level_1_16;
+
+
+#if RTC_mode_auto_Max
+	bit RTC_mode_auto_first_F;
+#endif
+
+
+byte  LED_duty;// word
+
+
+
+void LED_PWM_LEVEL_TABLE(); 
+
+void R_LED_Color_LEVEL_TABLE();
+void G_LED_Color_LEVEL_TABLE();
+void B_LED_Color_LEVEL_TABLE();
+
+
+void LED_PWM_16_LEVEL_TABLE()
+{
+	led_level_temp = 0;/*
+	if( temp_byte_value == 16 )
+	{
+		led_level_temp = RTC_led_level;
+		if( led_level_1_16 == 16  )
+		{
+			led_level_temp = led_level_Max;
+		}
+	}
+	else*/
+	{
+		while( temp_byte_value -- )
+		{
+			led_level_temp +=led_level_1_16;
+		}
+	}
+}
+
+void Color_INIT_LEVEL_TAB_RGB()
+{
+//	if( Color_mode )
+
+/*
+	if( RTC_led_level >= led_level_Max )
+		led_level_1_16 = 16;
+	else*/
+		led_level_1_16 = ( RTC_led_level ) >>4;
+
+	{
+		if( led_mode <= Color_mode_Max )
+		{
+				RTC_led_level = led_level;
+		}
+		else
+		{
+			if( led_mode != Color_mode_Max + RTC_mode_Max +  3   )// ||  guanji_RTC_mode_F
+				RTC_led_level = led_level;
+		}
+
+		Color_mode = led_mode;
+
+		a=Color_mode;
+		R_LED_Color_LEVEL_TABLE(); // LED_W_PWM = 0;
+		temp_byte_value = a ;
+		LED_PWM_16_LEVEL_TABLE();
+		LED_R_PWM_expect = led_level_temp;
+	//	LED_R_PWM_expect = led_level_Max - led_level_temp;
+
+		a=Color_mode;
+		G_LED_Color_LEVEL_TABLE(); // LED_W_PWM = 0;
+		temp_byte_value = a ;
+		LED_PWM_16_LEVEL_TABLE();
+		LED_G_PWM_expect = led_level_temp;
+
+		a=Color_mode;
+		B_LED_Color_LEVEL_TABLE(); // LED_W_PWM = 0;
+		temp_byte_value = a ;
+		LED_PWM_16_LEVEL_TABLE();
+		LED_B_PWM_expect = led_level_temp;
+//		engint;
+	}
+}
+
+
+
+void R_LED_Color_LEVEL_TABLE()
+{
+	a += 1;
+	pcadd a;
+	ret 0//255  1 
+
+	ret 16//1 
+	ret 15//2  
+	ret 14//3  
+	ret 13//4  
+	ret 12//5  5+1
+	ret 11//6 
+	ret 10//7 
+	ret 9//8 
+	ret 8//9 
+	ret 7//10 5+1+5
+	ret 6//11  
+	ret 5//12  
+	ret 4//13  
+	ret 3//14  
+	ret 2//15  5+1+5+5
+	ret 1//16  17
+
+	ret 0//17  18
+	ret 0//18 
+	ret 0//19 
+	ret 0//20 
+	ret 0//21 
+	ret 0//22 
+	ret 0//23 
+	ret 0//24 
+	ret 0//25 
+	ret 0//26 
+	ret 0//27 
+	ret 0//28 
+	ret 0//29 
+	ret 0//30 
+	ret 0//31 
+	ret 0//32 
+
+	ret 0//33  
+	ret 1//34  
+	ret 2//35  
+	ret 3//36  
+	ret 4//37  
+	ret 5//38  
+	ret 6//39  
+	ret 7//40 
+	ret 8//41  
+	ret 9//42 
+	ret 10//43 
+	ret 11//44 
+	ret 12//45 
+	ret 13//46 
+	ret 14//47 
+	ret 15//48  
+
+	ret 6//49 
+	ret 3//49 
+}
+
+void G_LED_Color_LEVEL_TABLE()
+{
+	a += 1;
+	pcadd a;
+	ret 0//255 
+
+	ret 0//1  
+	ret 1//2  
+	ret 2//3  
+	ret 3//4  
+	ret 4//5  
+	ret 5//6  
+	ret 6//7  
+	ret 7//8 
+	ret 8//9  
+	ret 9//10 
+	ret 10//11 
+	ret 11//12 
+	ret 12//13 
+	ret 13//14 
+	ret 14//15 
+	ret 15//16  
+
+	ret 16//17
+	ret 15//18  
+	ret 14//19  
+	ret 13//20  
+	ret 12//21  5+1
+	ret 11//22 
+	ret 10//23 
+	ret 9//24 
+	ret 8//25 
+	ret 7//26 5+1+5
+	ret 6//27  
+	ret 5//28  
+	ret 4//29  
+	ret 3//30  
+	ret 2//31  5+1+5+5
+	ret 1//32  17
+
+	ret 0//33  18
+	ret 0//34 
+	ret 0//35 
+	ret 0//36 
+	ret 0//37 
+	ret 0//38 
+	ret 0//39 
+	ret 0//40 
+	ret 0//41 
+	ret 0//42 
+	ret 0//43 
+	ret 0//44 
+	ret 0//45 
+	ret 0//46 
+	ret 0//47 
+	ret 0//48 
+
+	ret 6//49 
+	ret 3//49 
+}
+
+void B_LED_Color_LEVEL_TABLE()
+{
+	a += 1;
+	pcadd a;
+	ret 0//255 
+
+	ret 0//1 
+	ret 0//2 
+	ret 0//3 
+	ret 0//4 
+	ret 0//5 
+	ret 0//6 
+	ret 0//7 
+	ret 0//8 
+	ret 0//9 
+	ret 0//10 
+	ret 0//11 
+	ret 0//12 
+	ret 0//13 
+	ret 0//14 
+	ret 0//15 
+	ret 0//16 
+
+	ret 0//17  
+	ret 1//18  
+	ret 2//19  
+	ret 3//20  
+	ret 4//21  
+	ret 5//22  
+	ret 6//23  
+	ret 7//24 
+	ret 8//25  
+	ret 9//26 
+	ret 10//27 
+	ret 11//28 
+	ret 12//29 
+	ret 13//30 
+	ret 14//31 
+	ret 15//32  
+
+	ret 16//33
+	ret 15//34  
+	ret 14//35  
+	ret 13//36  
+	ret 12//37  5+1
+	ret 11//38 
+	ret 10//39 
+	ret 9//40 
+	ret 8//41 
+	ret 7//42 5+1+5
+	ret 6//43  
+	ret 5//44  
+	ret 4//45  
+	ret 3//46  
+	ret 2//47  5+1+5+5
+	ret 1//48  17
+
+	ret 6//49 
+	ret 11//49 
+}
+
+#endif

@@ -1,0 +1,36 @@
+
+
+
+extern void time_50us_tick_function(void);
+extern void PWM_strobe();
+
+extern byte led_color_255_1;
+
+
+extern byte long_key_speed_up;
+
+
+
+extern byte long_ley_adjust_parameter_50us_tick;
+extern byte long_ley_adjust_parameter_10ms_tick;
+
+
+
+
+
+extern void time_deal();
+
+extern byte time_50us_tick;
+extern byte time_1ms_tick;
+
+extern byte Flag_time_led_1ms_tick;
+extern byte Flag_time_led_100ms_tick;
+
+
+
+extern byte Led_time_1ms_tick; 
+extern byte time_led_speed_ms_tick;
+
+extern word duima_1ms_tick;
+
+

@@ -1,0 +1,15 @@
+
+
+#define XL_SMG			 	 0
+#define XL_SMG_gong_ying 	 0
+#define SMG_time			 1
+#define yiweisu 0
+#define liangweisu 1
+
+
+extern byte SMG_gewei_num;
+extern byte SMG_shiwei_num;
+extern byte SMG_display_num;
+extern byte SMG_shiwei_50us_time_count;
+extern byte SMG_num;
+extern void SMG_display_out(); //

@@ -1,0 +1,43 @@
+
+#include "common.h"
+
+#if XL_time_Sleep		   
+
+byte Sleep_time_50us_tick;
+byte Sleep_time_10ms_tick;
+byte Sleep_time_1s_tick;
+byte Sleep_time_1min_tick;
+
+bit sleep_mode_init_F;
+bit LED_Flash_warning_F;
+
+word Time_mode;
+
+void sleep_time_deal_function()
+{
+	if(  Time_mode && Sleep_time_50us_tick >= 200 )  // IR_LED_ON_F ON_F == 1 &&
+	{
+		Sleep_time_50us_tick= Sleep_time_50us_tick - 200 ; //   
+		Sleep_time_10ms_tick++;	//  		   
+		if (Sleep_time_10ms_tick >= 100 ) 	//  20	  100
+		{
+			Sleep_time_10ms_tick=0;	
+			Sleep_time_1s_tick++; // 	   
+			if (Sleep_time_1s_tick >=  60 ) //   1    60
+			{
+				Sleep_time_1s_tick=0;
+				Sleep_time_1min_tick++; //   
+				if (Sleep_time_1min_tick >=  Time_mode ) // 60  led_speed_Max 
+				{
+					Sleep_time_1min_tick = 0;
+				//	Time_mode_count		 = 0;
+					Time_mode            = 0;
+					//LED4				 = 0;
+					IR_LED_ON_F          = 0;
+				}
+			}
+		}
+	}
+}
+
+#endif

@@ -1,0 +1,79 @@
+
+extern void Led_mode_deal(); // MIN_
+
+//extern bit led_speed_init_F;
+
+extern byte step_1_value;
+extern byte step_2_value;
+extern byte step_3_value;
+extern byte step_4_value;
+extern bit back_F;
+
+extern bit short_mode_init_F; // 
+
+#if 0//PWM_BEEP
+	#if 1//IC_PFS122
+		$ TM3S 8BIT,/1,/16;
+	//	TM3B = 127;
+		$ TM3C IHRC,PB5,PWM;
+	//	TM3B = 0;					//1/256的亮度
+	//	$ TM3C Stop;				//关闭PWM，0%的亮度
+
+/*
+		TM3B = 0;					//1/256的亮度
+		$ TM3C Stop;				//关闭PWM，0%的亮度
+*/
+//	#else 
+
+		$ PWMG1S /16,/1;
+		PWMG1CUBL = 0b11_000000;
+		PWMG1CUBH = 0b0011_1111;
+		PWMG1DTL = (0 << 6) | 0b0010_0000;//将占空比分给占空比低位寄存器
+		PWMG1DTH = (0 >> 2);		//将占空比分给占空比高位寄存器
+
+		$ PWMG0S /16,/1;
+		PWMG0CUBL = 0b11_000000;
+		PWMG0CUBH = 0b0011_1111;
+		PWMG0DTL = (0 << 6) | 0b0010_0000;//将占空比分给占空比低位寄存器
+		PWMG0DTH = (0 >> 2);		//将占空比分给占空比高位寄存器
+
+
+		$ PWMG1C Enable,PB7,IHRC;
+		$ PWMG0C Enable,PB4,IHRC;
+//	$ LPWMG1C ;					//仅关闭LPWMG1
+//	$ LPWMG0C ;					//仅关闭LPWMG1
+
+	#endif
+#endif
+
+//extern bit auto_RTC_mode_F;
+
+//extern byte RTC_mode_10_step; 
+//extern byte RTC_mode_10_step_count; 
+
+//extern bit RTC_mode_10_count_F;
+
+//extern byte Light_variety_range_Count; 
+//extern byte speed_variety_range_Count; 
+
+
+extern byte Time_Count, Time_Count_fade;/*
+extern word LED_num_MAX;	 	
+extern word LED_num_2_4_MAX;*/
+
+
+//extern bit LED_Flash_warning_F;
+extern bit debug_F;
+extern bit IR_debug_F;
+
+//extern byte RTC_auto_count;
+
+extern byte fade_Time_Count;
+//extern byte RTC_mode_10_count;
+//extern byte  RTC_mode_15_count;
+//extern byte RTC_Color_mode;
+
+
+extern byte Time_Count_temp;
+extern byte fade_Time_Count_temp;
+extern byte  RTC_mode_15_count_temp;

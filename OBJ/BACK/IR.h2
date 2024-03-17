@@ -1,0 +1,27 @@
+void IR_DECODE(void);
+void IR_KEY_DEAL(void);
+
+extern byte IR_KEY_L;
+extern byte IR_KEY_L1;
+extern byte IR_SETP;
+extern byte ir_long_tick;
+extern byte ADDR_H;
+extern bit ir_err_f;
+extern bit IR_H_F;
+extern bit ir_repeat_f;
+extern byte ADDR_L;
+
+extern byte ir_tick;
+extern bit ir_ok_F;
+extern bit ir_deal_F;
+extern bit ir_end_F;
+//extern byte IR_KEY_F;
+extern byte ir_count;
+
+extern byte IR_LED_ON_F;
+
+//bit ir_long_key_speed_add_F;
+//bit ir_long_key_light_add_F;
+//extern bit ir_long_key_num_add_F;
+
+//extern byte IR_KEY_L_deal;

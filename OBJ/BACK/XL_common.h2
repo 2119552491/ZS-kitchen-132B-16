@@ -1,0 +1,93 @@
+
+
+
+
+#define IC_PMS152		0
+
+#define download_mode 	1
+
+#define XL_RTC_huxi			 0
+
+#define XL_RTC_3fade 		 0
+#define XL_RTC_7fade 		 0//1 + 1
+#define XL_RTC_liushui_fade  0
+#define XL_RTC_fade 		 XL_RTC_3fade + XL_RTC_7fade + XL_RTC_liushui_fade
+
+
+#define XL_RTC_Flash		 0
+
+#define XL_RTC_3JUMP 		 0
+#define XL_RTC_7JUMP 		 0
+#define XL_RTC_liushui_JUMP  0//1
+#define XL_RTC_JUMP 		 XL_RTC_3JUMP +  XL_RTC_7JUMP + XL_RTC_liushui_JUMP
+
+
+#define XL_RTC_baoshan    			 0
+#define XL_RTC_SOS_shan    			 0	
+
+#define XL_RTC_candle 				 0 
+
+#define RTC_mode_auto_Max   		 0
+
+#define XL_RTC_MIC_huxi			  	 0
+#define XL_RTC_MIC_fade  	 		 0 
+#define XL_RTC_MIC_JUMP 			 0 
+#define XL_RTC_MIC_Flash    		 0
+#define XL_RTC_MIC_huxi_255_to_0 	 0 
+
+
+#define MIC_mode_Max		 0//XL_RTC_MIC_huxi + XL_RTC_MIC_fade + XL_RTC_MIC_JUMP + XL_RTC_MIC_Flash + XL_RTC_MIC_huxi_255_to_0//2
+
+#define RTC_mode_Max    	 0//XL_RTC_huxi + XL_RTC_fade + XL_RTC_JUMP  + XL_RTC_Flash + XL_RTC_baoshan + RTC_mode_auto_Max //13
+
+#define led_mode_max_limit	 0
+
+///////////////////////////////////////////////////
+#define SYSCLK_8M		 	 0
+
+#include "extern.h"
+#include "XL_IO_config.h"
+#include "XL_init.h"
+
+#include "XL_I2C24C02.h"
+
+#include "XL_HC_luoti.h"
+#include "XL_MIC_AD.h"
+#include "XL_IR.h"
+#include "XL_IR_YW.h"
+#include "XL_IR_RGB.h"
+#include "XL_IR_send.h"
+#include "XL_IR_duima_deal.h"
+
+//#include "XL_tyn.h"
+
+#include "XL_key_led.h"
+#include "XL_key_juzheng.h"
+
+#include "XL_level_speed.h"
+
+#include "XL_HC_send.h"
+#include "XL_HC_qicailiushui.h"
+#include "XL_HC_music_VOL.h"
+
+#include "XL_YW_Color.h"
+#include "XL_RGB_Color.h"
+
+#include "XL_RGB_fade.h"
+#include "XL_RGB_huxi.h"
+#include "XL_RGB_Flash.h"
+#include "XL_RGB_Jump.h"
+#include "XL_RGB_candle.h"
+#include "XL_RGB_liushui_Jump.h"
+#include "XL_RGB_baoshan.h"
+#include "XL_RGB_SOS_shan.h"
+
+#include "XL_RGB_Mic4_huxi_255_to_0.h"
+
+
+
+#include "XL_sleep_dingshi.h"
+#include "XL_sleep_IC.h"
+#include "XL_time1.h"
+#include "XL_SMG_6_IO.h"
+#include "XL_SMG_11_IO.h"

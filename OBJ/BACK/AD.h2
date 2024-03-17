@@ -1,0 +1,28 @@
+﻿
+
+extern byte mic_cnt;
+extern byte MIC_vol;
+extern byte MIC_show_vol;
+
+extern word	cur_adc;//cur_adc
+
+extern word	old_adc; // old_adc
+
+extern byte	cur_adc_error; // cur_adc_errorΪ8��õ�ADCֵ
+
+extern byte g_comval_sensitivity;
+extern byte	old_adc_error; // PB4_cur_adc
+extern byte	cur_adc_error; // PB4_cur_adc
+
+extern bit  AD_DONE_F;
+extern bit  IR_MIC_init_F;
+
+extern void sun_power_deal();
+extern void	ADC_init(void);
+extern void	ADC_mea(void);
+extern void ADC_MAX_min_range_deal();
+extern void	ADC_deal();
+
+
+extern byte		Sun_power_Color_mode ;
+extern byte		Sun_power_RTC_mode ;

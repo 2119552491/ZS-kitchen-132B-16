@@ -1,0 +1,14 @@
+
+
+
+#define XL_IR_send 	1
+
+#define IR_send_IO 	PA.3
+ 
+extern void IR_send_one_byte();
+
+extern byte IR_send_temp_count;
+extern void Delay400us();
+extern void Delay600us();
+extern void Delay1500us();
+extern void Delay5ms();

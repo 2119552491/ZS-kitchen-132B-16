@@ -1,0 +1,200 @@
+﻿
+#include "XL_common.h"
+
+.ramadr 0 
+	word gw_Point;
+.ramadr system
+
+void T16IRQ_int();
+
+#if 1
+#endif
+
+void T16IRQ_int(void)
+{
+
+#if SYSCLK_8M		   
+	gw_Point = 160; 
+#else
+	gw_Point = 208; 
+#endif
+
+	$ t16m SYSCLK, / 4, bit8;
+
+	stt16 gw_Point;
+
+	intrq = 0;
+	INTEN.T16 = 1;				//中断允许寄存器，开T16中断
+	engint;
+}
+
+
+void Interrupt(void)
+{
+	pushaf;
+	if(Intrq.TM2)//		IR_in
+	{
+		Intrq.TM2	=	0;
+		#if 1//time_test // #endif
+			if(T_Key1_Signal)
+				T_Key1_Signal = 0;
+			else
+				T_Key1_Signal = 1;
+		#endif
+	}
+
+	if (Intrq.T16)
+	{
+		Intrq.T16 = 0;
+		stt16 gw_Point; // 50us +1 
+
+		#if XL_huancai
+
+		#else
+			#if 0//RGB_Color// 
+					/*
+					if (LED_duty >= led_level_Max )
+						LED_duty = 0;
+					*/
+					if (LED_R == LED_OFF) // > LED_duty
+				//	if (LED_R_PWM_temp > LED_duty) 
+						LED_R = LED_ON;
+					else
+						LED_R = LED_OFF;
+
+					if (LED_G_PWM_temp > LED_duty)
+						LED_G = LED_ON;
+					else
+						LED_G = LED_OFF;
+											
+					if (LED_B_PWM_temp > LED_duty)
+						LED_B = LED_ON;
+					else
+						LED_B = LED_OFF;
+					LED_duty++;
+			#endif
+			#if YW_Color// 
+					if (LED_Y_PWM_temp > LED_duty)
+						LED_Y = LED_ON;
+					else
+						LED_Y = LED_OFF;
+											
+					if (LED_W_PWM_temp > LED_duty)
+						LED_W = LED_ON;
+					else
+						LED_W = LED_OFF;
+			#endif
+		#endif
+
+		#if XL_Wuxian
+				ir_tick++;
+		#endif
+		
+		time_50us_tick++;
+
+		#if XL_AD_HC_MIC_VOL
+				AD_time_50us_tick++;
+		#endif
+	}
+	popaf;
+}
+
+void Delay500us()
+{
+	byte i;
+	i=250;
+	while(i--)
+	{
+		nop;
+	}
+}
+
+
+
+void FPPA0(void)
+{
+
+#if SYSCLK_8M		   
+	.ADJUST_IC SYSCLK = IHRC/ 2, IHRC = 16MHz, VDD = 3.9V;
+#else
+	.ADJUST_IC SYSCLK = IHRC/ 4, IHRC = 16MHz, VDD = 3.4V;
+#endif
+
+	gw_Point = _SYS(RAM_SIZE) - 1;
+	a = 0;
+	do
+	{
+		*gw_Point = a;
+	} while (--gw_Point$0);
+    
+  //PA     = 	0x00;//0b1110_0000;~T_Key1_mode;// 
+    PAC    = ~( IR_in_mode | T_Key1_mode | 0 | 0 | 0);//T_Key1_mode;//  
+    PAPH   =  ( IR_in_mode | T_Key1_mode | 0 | 0 | 0);   
+	PADIER =  ( IR_in_mode | T_Key1_mode | 0 | 0 | 0);//T_Key1_mode;//  
+	
+  //PB     = 0;//IR_send_IO_mode; IR_in_mode
+    PBC    = ~( 0 | MIC1_mode | MIC2_mode | MIC3_mode );//0b1111_1111;    //1:���, 0:����   PA7/5=input
+    PBPH   =  0x00;// ( 0 | 0 | SDA_mode | 0		);//0b0000_0000;    //1:������ 0:��������
+    PBDIER =  0x00;// ( 0 | 0 | SDA_mode | SCL_mode);//
+	shengya = 1;
+#if XL_24C02	
+	read_comval();
+	if(download_init_A5 != 0xA5 )  /// 
+#endif
+	{
+#if XL_24C02
+		download_init_A5 = 0xA5;
+#endif
+
+//		led_mode =  1;//Color_mode_YW_Max + 9   ;//Color_mode_Max + 1 ;//  +  RTC_mode_Max + 1 7 RTC_mode_Max + 3
+//		led_speed = led_speed_Mid      ; //    led_speed_Max   
+	//	led_level = led_level_Max;//
+
+
+	}
+	short_mode_init_F = 1;
+//	IR_LED_ON_F		  = 0;
+//	led_speed 		  = 27;
+
+#if XL_AD
+	ADC_init();
+#endif
+
+//void	TM2_Period(void)
+{
+	tm2ct = 0;						//计数寄存器
+	tm2b = 88;//10  1ms						//上限寄存器，计数值超出上限寄存器的设定值时会产生中断；
+	$ TM2C ILRC,Disable,Period;	//时钟源选择，输出脚选择，模式选择定周期模式；
+									//时钟源可选择STOP, SYSCLK, IHRC, EOSC, ILRC, GPCRS, PA0_R, PA0_F, PB0_R, PB0_F, PA4_R, PA4_F
+									//注：产生中断时不需要输出脚和反极性；
+	$ TM2S 8BIT,/1,/32;				//分辨率选择，可以选择8bit或6bit；时钟预分频选择，有/1, /4, /16, /64；时钟分频选择/1 ~ /32
+					//计算公式为 1/{时钟源*2/[2*(TM2B+1)*预分频*分频]}
+					//	 	   = 1/(1M*2/(2*TM2B+1)*4*25) = 1/(1000000*2/(2*(49+1)*4*25)) = 0.005s
+}
+	INTEN.TM2 = 1;				//中断允许寄存器，开TM2中断
+/*
+	g_comval_sensitivity = 10;
+
+	while(g_comval_sensitivity--)
+	{
+		IR_LED_ON_F = 200;
+		while(IR_LED_ON_F--)
+		{
+			Delay500us();
+		}
+	}*/
+	T16IRQ_int();
+
+#if XL_AD
+//	g_comval_sensitivity = g_comval_sensitivity_Max;
+#endif
+	IR_LED_ON_F		  = 1;
+	while (1)
+	{
+#if XL_Wuxian		   
+		IR_DECODE();
+		IR_KEY_DEAL();
+#endif
+		time_50us_tick_function();
+	}
+}

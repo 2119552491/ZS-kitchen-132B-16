@@ -1,0 +1,27 @@
+
+
+
+#define XL_Sleep_time 		 			    0
+
+#define XL_Sleep_led_Flash_warning 		    1 
+#define XL_level_led_Flash_warning 		    0
+#define XL_speed_led_Flash_warning 		    0
+#define XL_AD_led_Flash_warning 		    0
+#define XL_mode_led_Flash_warning 		    0
+#define XL_music_mode_led_Flash_warning     0
+
+
+extern word Sleep_time_50us_tick;
+extern byte Sleep_time_10ms_tick;
+extern byte Sleep_time_1s_tick;
+extern byte Sleep_time_1min_tick;
+
+//extern byte Flag_time_led_10ms_tick;
+
+extern bit sleep_mode_init_F;
+extern byte LED_Flash_warning_F;
+
+
+extern byte Time_mode;
+
+extern void sleep_time_deal_function();

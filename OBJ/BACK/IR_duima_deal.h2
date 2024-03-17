@@ -1,0 +1,59 @@
+
+extern void IR_DECODE(void);
+extern void IR_KEY_DEAL(void);
+extern void IR_init(void);
+
+extern byte  IR_LED_ON_F;
+extern byte  IR_KEY_F;
+
+extern byte Led_time_1ms_tick; 
+extern byte time_led_speed_ms_tick;
+
+extern byte Led_time_1ms_tick_R_level;
+extern byte Sun_power_Time_Count;
+extern bit IR_KEY_21_F;
+extern bit IR_KEY_22_F;
+
+extern byte IR_FLASH_STROBE_FADE_SMOOTH_cyclic_F;
+extern bit IR_FLASH_STROBE_FADE_SMOOTH_cyclic_init;
+extern void R_G_LED_Color_LEVEL_TABLE1();
+extern void B_LED_Color_LEVEL_TABLE1();
+extern bit IR_speed_add_F;
+extern bit IR_speed_sub_F;  //  
+extern bit IR_level_add_F;
+extern bit IR_level_sub_F;
+extern bit send_cur_adc_F;
+extern bit IR_MIC_add_F;
+extern bit IR_MIC_sub_F;
+
+extern byte time_led_speed_ms_tick1;
+extern byte Led_time_1ms_tick1; 
+
+extern bit  ir_long_key_add_F;
+extern bit  ir_long_key_sub_F;
+extern bit  decrease_F;
+extern BYTE IR_time_1mS_tick;
+extern byte IR_KEY_L;
+extern byte IR_SETP;
+extern byte ADDR_H;
+extern bit  ir_err_f;
+extern bit ir_deal_F;
+extern bit  IR_H_F;
+extern bit  ir_repeat_f;
+extern byte ADDR_L;
+extern byte IR_KEY_H;
+extern byte ir_tick;
+extern bit  ir_ok_F;
+extern byte ir_long_tick;
+extern bit ir_long_key_speed_add_F;
+extern bit ir_long_key_light_add_F;
+extern bit ir_long_key_num_add_F;
+extern bit ir_long_key_add_F;
+extern byte IR_KEY_L_deal;
+extern bit ir_end_f;
+extern bit duima_F;
+extern byte duima_write_F;
+extern byte ADDR_H_check;
+extern byte ADDR_L_check;
+extern bit duima_flash_F;
+extern bit quxiao_duima_flash_F;

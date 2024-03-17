@@ -1,0 +1,18 @@
+
+
+extern void mode_color_TABLE();
+
+extern void mode_RTC_TABLE();
+extern void mode_14_TABLE();
+
+extern void mode_15_TABLE();
+
+extern void mode_13_TABLE();
+extern void mode_11_TABLE();
+extern void mode_2_TABLE();
+extern void mode_3_TABLE();
+extern void mode_12_TABLE();
+
+extern void mode_5_TABLE();
+extern void mode_6_TABLE();
+extern void mode_8_TABLE();

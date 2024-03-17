@@ -1,0 +1,4 @@
+
+extern void Mic2_Mode_TABLE();
+extern byte AD_num_count;
+extern void Mic2_deal();

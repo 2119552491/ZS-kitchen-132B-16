@@ -1,0 +1,301 @@
+﻿
+#include "common.h"
+
+//byte i;
+word i1;
+
+
+void Delay1ms(void)
+{
+//	disgint;
+	 i1=500;
+	while(i1--)
+	{
+		nop;
+	}
+//	engint;
+}
+
+#if XL_24C02		   
+
+BYTE a1;
+BYTE a2;
+byte a3;
+//byte I2C_CRC;
+
+byte I2C_dat;
+byte  download_init_A5;//ֻ����һ�γ�ʼֵ�ı��
+
+BIT I2C_dat_7 : I2C_dat.7;
+BIT I2C_dat_0 : I2C_dat.0;
+
+
+//byte led_order_F;  // ����R_G_B  pin��˳��
+
+void Start();
+void Stop();
+void Read8Bit();
+void Write8Bit();
+void At24C02Read();
+void At24C02Write();
+void At24C02_init();
+
+
+
+void At24C02_init()
+{
+	SDA_C    = 1;  // IIC_cur_adc  SDA 
+	SDA = 1;
+	SDA_Pull_mode   = 1;
+
+	SCL_mode    = 1;  // IIC_CLK   SCL
+	SCL = 1;
+
+	read_comval();
+	RTC_mode = 1;
+	if(download_init_A5 != 0xA3 )  /// 
+	{
+		download_init_A5 = 0xA3;
+
+		IR_LED_ON_F		  = 1;
+		led_mode = 28;
+		led_speed = led_speed_Min; 
+		led_level_count = 10;	
+		RTC_Color_mode = 3;
+		RTC_mode_10_count = 1;
+		g_comval_sensitivity = g_comval_sensitivity_Min;
+
+		save_comval();
+
+	}
+}
+
+
+/*
+/void Delay1ms(void) // 100us
+{
+//	disgint;
+	word i1=25;
+	while(i1--)
+	{
+		nop;
+	}
+//	engint;
+}*/
+
+void Delay10ms(void)
+{
+	disgint;
+	word i1=5000;
+	while(i1--)
+	{
+		nop;
+	}
+	engint;
+}
+
+void Start()
+{
+	SDA=1;
+	Delay10us();
+	SCL=1;
+	Delay10us();
+	SDA=0;
+	Delay10us();
+	SCL=0;
+	Delay10us();
+}
+void Stop()
+{
+
+	SDA=0;
+	Delay10us();
+	SCL=1;
+	Delay10us();
+	SDA=1;
+	Delay10us();
+}
+
+
+
+void ACK()
+{
+   SDA=0;
+		Delay10us();
+
+   SCL=1;
+		Delay10us();
+
+   SCL=0;
+		Delay10us();
+
+   SDA=1;
+ 		Delay10us();
+}
+void NoAck()
+{
+   SDA=1;
+		Delay10us();
+
+   SCL=1;
+		Delay10us();
+
+   SCL=0;
+		Delay10us();
+
+}
+void Write8Bit()
+{
+	a1=0;
+   while(a1<8)
+   {
+	    a1++;
+		if(I2C_dat_7)
+			SDA=1;
+		else
+			SDA=0;
+		Delay10us();
+    	SCL=1;
+		Delay10us();
+    	SCL=0;
+   	 	I2C_dat=I2C_dat<<1;
+		Delay10us();
+  }
+	SDA=1;	
+	Delay10us();
+    SCL=1;
+	while(SDA)
+	{
+		a2++;
+		if(a2>200)
+		{
+		    SCL=0;
+			Delay10us();
+		    a=0;
+		    return;
+		}	
+	}
+    SCL=0;
+	Delay10us();
+    a=1;
+    return;
+}
+
+void Read8Bit()
+{
+
+	SDA=1;	
+	Delay10us();
+	a3=0;
+	SDA_C=0;
+	Delay10us();
+
+	    while(a3<8)
+		{
+			a3++;
+			SCL=1;
+			Delay10us();
+			I2C_dat=I2C_dat<<1;
+			if(SDA)
+				I2C_dat_0=1;
+			else
+				I2C_dat_0=0;
+			SCL=0;
+			Delay10us();
+		}
+	SDA_C=1;
+	Delay10us();
+
+
+	a=I2C_dat;
+	return;
+}
+
+void save_comval()
+{
+		disgint;
+		Start();
+		I2C_dat=0xa0;
+		Write8Bit();
+		I2C_dat=0x00;
+		Write8Bit();
+
+		I2C_dat=download_init_A5;     
+		Write8Bit();
+
+		I2C_dat=IR_LED_ON_F;     
+		Write8Bit();
+
+		I2C_dat=led_mode;     
+		Write8Bit();
+
+		I2C_dat=led_speed; 
+		Write8Bit();
+
+		I2C_dat=led_level_count;
+		Write8Bit();
+
+		I2C_dat=RTC_Color_mode; 
+		Write8Bit();
+
+		I2C_dat=RTC_mode_10_count;     
+		Write8Bit();
+
+		I2C_dat=g_comval_sensitivity;     
+		Write8Bit();
+		Stop();		
+
+		engint;
+}
+
+void read_comval()
+{
+		disgint;
+		Start();
+		I2C_dat=0xa0;
+		Write8Bit();
+		I2C_dat=0x00;
+		Write8Bit();
+
+		Start();
+		I2C_dat=0xa1;
+		Write8Bit();
+
+		Read8Bit();
+		download_init_A5	=a;
+		ACK();
+
+		Read8Bit();
+		IR_LED_ON_F	=a;   // led_level led_speed
+		ACK();
+
+		Read8Bit();
+		led_mode	=a;   // led_level led_speed
+		ACK();
+
+		Read8Bit();
+		led_speed	=a;   // led_level led_speed
+		ACK();
+
+		Read8Bit();
+		led_level_count	=a;   // led_level led_speed
+		ACK();
+
+		Read8Bit();
+		RTC_Color_mode	=a;   // led_level led_speed
+		ACK();
+
+		Read8Bit();
+		RTC_mode_10_count	=a;   // led_level led_speed
+		ACK();
+
+		Read8Bit();
+		g_comval_sensitivity	=a;   // led_level led_speed 
+		ACK();
+
+		Stop();	
+
+		engint;
+}
+
+#endif

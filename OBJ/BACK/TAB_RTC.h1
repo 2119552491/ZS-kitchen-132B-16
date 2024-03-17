@@ -1,0 +1,5 @@
+
+
+extern void LED_7_Smooth_Mode_TABLE();
+extern void LED_7_Smooth_Mode_TABLE();
+extern void LED_7_Fade_Mode_TABLE(void); 

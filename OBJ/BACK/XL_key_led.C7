@@ -1,0 +1,377 @@
+
+#include "XL_common.h"
+
+void Key_led_scan();
+
+#if XL_Key_led
+
+#if XL_key_1
+	byte key1_tick;
+
+	#if XL_key_1_long
+		bit KEY_long_time_F1;
+	#endif
+#endif
+
+#if XL_key_2
+	byte key2_tick;
+
+	#if XL_key_2_long
+		bit KEY_long_time_F2;
+	#endif
+#endif
+
+#if XL_key_3
+	byte key3_tick;
+
+	#if XL_key_3_long
+		bit KEY_long_time_F3;
+	#endif
+#endif
+
+#if XL_key_4
+	byte key4_tick;
+
+	#if XL_key_4_long
+		bit KEY_long_time_F4;
+	#endif
+#endif
+
+#if XL_key_5
+	byte key5_tick;
+
+	#if XL_key_5_long
+		bit KEY_long_time_F5;
+	#endif
+#endif
+
+bit add_sub_F;
+
+
+void Key_scan()
+{
+	#if XL_Key_led |  XL_Key_juzheng		   
+
+		#if XL_key_1
+				key1_tick++;
+		#endif
+
+		#if XL_key_2
+				key2_tick++;
+		#endif
+
+		#if XL_key_3
+				key3_tick++;
+		#endif
+
+		#if XL_key_4
+				key4_tick++;
+		#endif
+
+		#if XL_key_5
+				key5_tick++;
+		#endif
+	#endif
+
+	#if IO_fuyong
+			PAC = ~( T_Key5_mode | T_Key1_mode | T_Key2_mode | T_Key3_mode | T_Key4_mode );
+			Delay10us();
+			Delay10us();
+	#endif
+
+#if XL_key_1
+	if( T_Key1_Signal == 0 ) //  LED
+	{
+		if(key1_tick >= Key_short_time ) // key_long_time Key_short_time
+		{
+			key1_tick  = Key_short_time;
+			motor_work_time_limit_F = 1;
+#if XL_key_1_long
+			if( KEY_long_time_F1 == 0 )
+			{	
+				KEY_long_time_F1 = 1;
+				if( add_sub_F )
+					IR_KEY_L_deal  = 201;
+				else
+					IR_KEY_L_deal  = 203;
+			}
+#endif
+		}
+	}
+	else
+	{
+		motor_work_time_limit_F = 0;
+		#if 0 
+			if (  key1_tick >= Key_short_time   ) //  	 	 			
+			{
+				#if XL_key_1_long
+					if ( KEY_long_time_F1 == 0 )
+				#endif
+				{
+
+					short_mode_init_F = 1;
+					if( IR_LED_ON_F == 0 )  IR_LED_ON_F = 1;
+					else					IR_LED_ON_F = 0;
+				}
+				#if XL_24C02	
+							save_step = 1;//save_comval();
+				#endif
+				if( add_sub_F )
+					add_sub_F = 0;
+				else
+					add_sub_F=  1;
+				IR_KEY_L_deal  = 0;
+			}
+		#endif
+		key1_tick				    = 0;
+		#if XL_key_1_long // #endif
+			KEY_long_time_F1 = 0;
+		#endif
+	}
+#endif
+
+#if XL_key_2
+
+	if( T_Key2_Signal == 0 ) //  sub
+	{
+		if(key2_tick >= key_long_time ) // 
+		{
+			key2_tick  = key_long_time;
+		//	sub_F = 1;
+#if XL_key_2_long
+			if ( KEY_long_time_F2 == 0 )
+			{
+				KEY_long_time_F2 = 0;
+			}
+#endif
+		}
+	}
+	else
+	{
+		if (  key2_tick >= Key_short_time   ) // add 
+		{
+			short_mode_init_F = 1;
+#if XL_key_2_long
+			if ( KEY_long_time_F2 == 0 )
+#endif
+			{
+#if XL_Sleep_time
+				sleep_mode_init_F = 1;
+				if( Time_mode )  	
+				{
+					Time_mode = 0 ;
+				}
+				else		
+				{
+					Time_mode = 60;	
+				}
+#endif
+			}
+#if XL_24C02	
+			save_step = 1;//save_comval();
+#endif
+		}
+	//	sub_F = 0;
+		key2_tick = 0;
+		#if XL_key_2_long // #endif
+			KEY_long_time_F2 = 0;
+		#endif
+
+	}
+#endif
+
+#if XL_key_3
+
+	if( T_Key3_Signal == 0 ) //  speed
+	{
+		if(key3_tick >= key_long_time ) // 
+		{
+			key3_tick  = key_long_time;
+
+#if XL_key_3_long // #endif
+
+			if( KEY_long_time_F3 == 0 )
+			{	
+				KEY_long_time_F3 = 1;
+				IR_KEY_L_deal = 201;
+			}
+
+#endif
+		}
+	}
+	else
+	{
+		if (  key3_tick >= Key_short_time   ) // 
+		{
+			short_mode_init_F = 1;
+
+#if XL_key_3_long
+			if ( KEY_long_time_F3 == 0 )
+#endif
+			{
+				#if XL_Sleep_time
+					sleep_mode_init_F = 1;
+					Time_mode = 25;
+				#endif
+
+
+				if( IR_LED_ON_F )
+				{
+					IR_LED_ON_F	= 0;
+				}
+				else
+				{
+					IR_LED_ON_F = 1;
+				}
+
+
+			}
+
+			#if XL_24C02		   
+				save_step = 1;//save_comval();
+			#endif
+#if  IR_Long_key //XL_wuxian
+			IR_KEY_L_deal = 0;
+#endif
+		}
+		key3_tick = 0;
+
+		#if XL_key_3_long // #endif
+			KEY_long_time_F3 = 0;
+		#endif
+	}
+#endif
+
+#if XL_key_4
+	if( T_Key4_Signal == 0 ) //  //  LED
+	{
+		if( key4_tick >= key_long_time )  
+		{
+			key4_tick  = key_long_time;
+
+#if XL_key_4_long //  #endif
+
+			if( KEY_long_time_F4 == 0 )
+			{	
+				KEY_long_time_F4 = 1;
+				IR_KEY_L_deal = 203;
+			}
+
+#endif
+		}
+	}
+	else
+	{
+		if (  key4_tick >= Key_short_time   )  
+		{
+#if XL_key_4_long // #endif
+			if ( KEY_long_time_F4 == 0 )
+#endif
+			{
+				short_mode_init_F = 1;
+
+#if XL_Sleep_time
+				sleep_mode_init_F = 1;
+				Time_mode = 60;
+#endif
+
+				if( IR_LED_ON_F )
+				{
+					IR_LED_ON_F	= 0;
+				}
+				else
+				{
+					IR_LED_ON_F = 1;
+				}
+			}
+#if XL_24C02		   
+			save_step = 1;//save_comval();
+#endif
+#if  IR_Long_key
+			IR_KEY_L_deal = 0;
+#endif
+		}
+		key4_tick = 0;
+		#if XL_key_4_long // #endif
+			KEY_long_time_F4 = 0;
+		#endif
+	}
+#endif
+
+#if XL_key_5
+	if( T_Key5_Signal == 0 ) //  //  LED
+	{
+		if( key5_tick >= key_long_time )  
+		{
+			key5_tick  = key_long_time;
+
+#if XL_key_5_long //  
+			if( KEY_long_time_F5 == 0 )
+			{	
+				KEY_long_time_F5 = 1;
+
+				short_mode_init_F = 1;
+				IR_LED_ON_F = 0;
+			}
+#endif
+		}
+	}
+	else
+	{
+		if (  key5_tick >= Key_short_time   )  
+		{
+			short_mode_init_F = 1;
+
+#if XL_key_5_long // #endif
+			if ( KEY_long_time_F5 == 0 )
+#endif
+			{
+				#if XL_Sleep_time
+					sleep_mode_init_F = 1;
+				#endif
+					IR_LED_ON_F = 0;
+			}
+		}
+
+		#if XL_24C02		   
+			save_step = 1;//save_comval();
+		#endif
+		key5_tick = 0;
+		#if XL_key_5_long // #endif
+			KEY_long_time_F5 = 0;
+		#endif
+	}
+#endif
+
+#if IO_fuyong
+	if( IR_LED_ON_F )
+	{
+		PA    =  ( T_Key5_mode | T_Key1_mode | T_Key2_mode | T_Key3_mode | T_Key4_mode );//~( T_Key5_mode );//T_Key5_mode = 1;
+		PAC    = ~( T_Key5_mode );//T_Key5_mode = 1;
+		Delay10us();
+		Delay10us();
+
+		if( led_level == led_level_Max )
+			T_Key1_Signal = 0;// on_off_Blue_led
+		else
+			T_Key1_Signal = 1;
+
+		if( Time_mode == 5 )
+			T_Key2_Signal = 0;// on_off_Blue_led
+		else
+			T_Key2_Signal = 1;
+
+		if( Time_mode == 25 )
+			T_Key3_Signal = 0;// on_off_Blue_led
+		else
+			T_Key3_Signal = 1;
+
+		if( Time_mode == 60 )
+			T_Key4_Signal = 0;// on_off_Blue_led
+		else
+			T_Key4_Signal = 1;
+	}
+#endif
+}
+
+#endif

@@ -1,0 +1,94 @@
+
+#include "XL_common.h"
+
+#if XL_HC_one_color_liushui_9999990099_F	// not finish   
+/*
+1000000000000
+1111000000000
+1111111111111
+1000000000000
+*/
+
+
+void XL_HC_one_color_liushui_999999900_deal() // RTC_1ms_tick && LED_Flash_warning_F == 0
+{
+	if( Led_time_50us_tick >= 20   )  // Led_time_1ms_tick ON_F && IR_MIC_F == 2 22 
+	{
+		Led_time_50us_tick= 0;
+		time_led_speed_ms_tick++;	// time_LED_LEVEL_Max_tick Led_time_1ms_tick
+
+		if ( time_led_speed_ms_tick >=  10  ) // 255 led_speed_Max led_level LED_LEVEL_Max RTC_mode_15_count
+		{
+			time_led_speed_ms_tick = 0;
+
+			Time_Count++;
+			XL_temp_count = Led_num_Max - 3 - step_1_value;
+			if( Time_Count >= XL_temp_count )
+			{
+				Time_Count = 1;
+				step_1_value += 3;
+				if( step_1_value >= Led_num_Max - 3 )
+					step_1_value = 0;
+			}
+
+			disgint;
+
+			led_num = 3 + step_1_value;// 
+			while( led_num -- )
+			{ 
+				led_level_temp = led_level_Max;
+				send_one_byte(  );// 
+				led_level_temp = led_level_Max;
+				send_one_byte(  );// 
+				led_level_temp = led_level_Max;
+				send_one_byte(  );// 
+			}
+
+
+			led_num = Led_num_Max - Time_Count - 3 - step_1_value;// 
+			while( led_num -- )
+			{ 
+				led_level_temp = 0;
+				send_one_byte(  );// 
+				led_level_temp = 0;
+				send_one_byte(  );// 
+				led_level_temp = 0;
+				send_one_byte(  );// 
+			}
+
+
+			led_num = 3;
+			while( led_num -- )
+			{ 
+				led_level_temp = led_level_Max;
+				send_one_byte(  );// 
+				led_level_temp = led_level_Max;
+				send_one_byte(  );// 
+				led_level_temp = led_level_Max;
+				send_one_byte(  );// 
+			}
+
+			if( Time_Count > 3 )
+			{
+				led_num = Time_Count - 3 ;
+			}
+			else
+				led_num =  3 ;
+			while( led_num -- )
+			{ 
+				led_level_temp = 0;
+				send_one_byte(  );// 
+				led_level_temp = 0;
+				send_one_byte(  );// 
+				led_level_temp = 0;
+				send_one_byte(  );// 
+			}
+
+
+			engint;
+		}
+	}
+}
+
+
+#endif

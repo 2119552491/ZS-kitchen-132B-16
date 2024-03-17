@@ -1,0 +1,109 @@
+
+
+
+#define sleep_test  		 0
+
+#define IC_2824				 1
+
+#define download		     0
+
+#define XL_Wuxian 			 1
+#define XL_wuxian_IR      	 0    //4
+#define XL_wuxian_433      	 1    //4
+#define XL_wuxian_duima      0    //4
+
+#define XL_24C02    		 0
+
+
+#define XL_AD     			 1
+#define XL_time_Sleep 		 0
+#define XL_system_Sleep 	 0
+#define XL_Key	 			 1
+#define XL_Key_juzheng		 0
+
+
+#define XL_RTC_huxi			 1
+#define XL_RTC_fade 		 1 
+#define XL_RTC_JUMP 		 1 
+
+#define XL_led_Color		 1
+
+#define SYSCLK_8M		 	 0
+
+#include "extern.h"
+#include "I2C24C02.h"
+#include "AD.h"
+
+#include "RGB_huxi.h"
+#include "RGB_fade.h"
+#include "RGB_JUMP.h"
+
+#include "RGB_Mic1_fade.h" 
+#include "RGB_Mic2_huxi.h"
+#include "RGB_Mic3_jump.h"
+#include "RGB_Mic4_huxi_0.h"
+
+
+
+#include "IR.h"
+#include "IR_duima_deal.h"
+#include "IO_config.h"
+#include "key.h"
+#include "PWM.h"
+#include "sleep.h"
+
+#include "RGB_Color.h"
+
+#include "time1.h"
+
+#define Table_key_num 28
+
+//#define Color_level_Min 6//410// 820//
+
+#define Color_mode_Max  8
+#define RTC_mode_Max    4
+#define MIC_mode_Max    4
+
+#define key_short_time    5
+
+#if download		   
+	#define key_long_time     50 // 10ms * 250 =  2500ms 
+#else
+	#define key_long_time     50 // 10ms * 50 =  500ms 
+#endif
+
+#define led_level_Min 	 	 			24//410// 820//
+#define led_level_Max 	 	 			254//2048//4096//16//  8192//
+#define short_key_Light_variety_range	23
+
+#define g_comval_sensitivity_Max      		100
+#define g_comval_sensitivity_Min 	   		10
+#define g_comval_sensitivity_variety_range  10
+
+
+#define led_speed_Max      		120
+#define led_speed_Min 	   		20
+#define speed_variety_range  	10
+
+
+
+
+
+
+/*
+#define g_comval_sensitivity_Max      			61   
+#define g_comval_sensitivity_Min 	   			6 
+#define g_comval_sensitivity_variety_range  	6
+
+	#define LED_LEVEL_4_5_Max 	 	 128
+	#define LED_LEVEL_3_5_Max 	 	 64
+	#define LED_LEVEL_2_5_Max 	 	 32
+	#define LED_LEVEL_1_5_Max 	 	 16
+
+#define g_comval_sensitivity_Max  	g_comval_sensitivity_Max
+#define g_comval_sensitivity_Min    g_comval_sensitivity_Min
+#define g_comval_sensitivity_STEP	g_comval_sensitivity_variety_range
+
+*/
+
+//#define RTC_mode_Max	   10

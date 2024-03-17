@@ -1,0 +1,25 @@
+
+extern byte led_level_temp;
+extern byte LED_num;
+
+extern byte send_time_count;
+
+extern byte send_count;
+
+extern byte send_data_table[]; // 81 send_data_table
+
+extern byte LED_num_MAX_0 ;
+extern byte LED_num_MAX_1 ;
+
+extern word point_send_data_table1;
+extern word point_send_data_table2;
+extern void send_three_byte();
+extern void send_one_byte();
+extern void send_000();
+extern void send_all_byte ();
+extern void send_byte_deal ();
+extern void send_all_byte_no_interrput_deal ();
+
+
+extern void HC_INIT_LEVEL_TAB_send();
+extern void Color_INIT_LEVEL_TAB_send();

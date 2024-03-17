@@ -1,0 +1,385 @@
+
+#if 0
+			#if XL_AD & XL_AD_HC_MIC_VOL
+				MIC_10ms_tick++;
+			    //if( MIC_10ms_tick >= 25)  MIC_10ms_tick = 25;
+			#endif
+
+#if XL_AD
+
+#if XL_AD_HC_MIC_VOL
+    if( AD_time_50us_tick >= 1) // time_50us_tick
+    {
+		AD_time_50us_tick = 0;
+
+		temp_byte_value = 1;
+		while( temp_byte_value -- )
+		{
+			if( MIC_show_vol < cur_adc_error )
+			{
+				MIC_show_vol++;
+
+				if( MIC_show_vol >= Led_num_Max + 1 )
+					MIC_show_vol = Led_num_Max + 1 ;
+
+				MIC_show_vol_1_2 = MIC_show_vol>>1;
+			}
+		}
+	}
+#endif
+#endif
+
+#if RGB_Color
+		Led_time_1ms_tick++;
+		//if ( Led_time_1ms_tick >= 255 )  Led_time_1ms_tick	=  255;
+#endif
+
+#if XL_SMG_6_IO | XL_SMG_11_IO
+		SMG_display_6_step(); 
+#endif
+
+#if XL_Wuxian
+	#if XL_wuxian_IR
+		ir_long_tick_err++;
+		if ( ir_long_tick_err >= 150 ) // 9MS   6-12MS
+		{
+			ir_long_tick_err	=  0;
+			if( IR_SETP != 0 )
+			{
+				ir_err_f = 1;
+			}
+		}
+	#elif XL_wuxian_433
+		if (IR_SETP == 1)	ir_tick_1ms++;
+		else				ir_tick_1ms = 0;
+	#endif
+	ir_long_tick++;
+#endif
+
+
+
+#if 0
+		#if IC_PMS152
+			if( LED_Y_PWM_temp ) 	$ LPWMG2C LPWMG2,PA3;//选择时钟源，输出脚，PWM模式，是否反极性输出（写Inverse为启用，不写则为停用
+			else					$ LPWMG2C ;				//关掉时钟，即TM2停止工作
+
+			if( LED_W_PWM_temp )	$ LPWMG1C LPWMG1,PA4;	//选择时钟源，输出脚，PWM模式，是否反极性输出（写Inverse为启用，不写则为停用）
+			else					$ LPWMG1C ;				//关掉时钟，即TM2停止工作
+
+		//	LPWMG0DTL = (LED_Y_PWM_temp << 6);// | 0b0010_0000;//?????????????λ?????
+		//	LPWMG0DTH = (LED_Y_PWM_temp >> 2);		//?????????????λ?????
+			LPWMG2DTL = (LED_Y_PWM_temp << 6);// | 0b0010_0000;//?????????????λ?????
+			LPWMG2DTH = (LED_Y_PWM_temp >> 2);		//?????????????λ?????
+
+			LPWMG1DTL = (LED_W_PWM_temp << 6);// | 0b0010_0000;//?????????????λ?????
+			LPWMG1DTH = (LED_W_PWM_temp >> 2);		//?????????????λ?????
+		#else
+
+			if( LED_Y_PWM_temp )	$ PWMG2C Enable,PA3,IHRC;// IHRC 选择时钟源，输出脚，PWM模式，是否反极性输出（写Inverse为启用，不写则为停用）
+			else					$ PWMG2C;//$ PWMG2C STOP;//关掉时钟，即TM2停止工作
+
+			if( LED_W_PWM_temp )	$ PWMG1C Enable,PA4,IHRC;//// IHRC 选择时钟源，输出脚，PWM模式，是否反极性输出（写Inverse为启用，不写则为停用）
+			else					$ PWMG1C;					//关掉时钟，即PWMG2停止工作
+
+		//	PWMG0DTL = (LED_Y_PWM_temp << 6);// | 0b0010_0000;//?????????????λ?????
+		//	PWMG0DTH = (LED_Y_PWM_temp >> 2);		//?????????????λ?????
+			PWMG2DTL = (LED_Y_PWM_temp << 6);// | 0b0010_0000;//?????????????λ?????
+			PWMG2DTH = (LED_Y_PWM_temp >> 2);		//?????????????λ?????
+
+			PWMG1DTL = (LED_W_PWM_temp << 6);// | 0b0010_0000;//?????????????λ?????
+			PWMG1DTH = (LED_W_PWM_temp >> 2);		//?????????????λ?????
+		#endif
+
+#endif
+		#if XL_24C02
+				/*
+				if( save_step == 2 )
+				{
+					save_comval(0x08);
+					save_step = 1;
+				}
+				else */
+				{
+					if( save_step == 1 )
+					{
+						save_comval();//0x00
+						save_step = 0;
+					}
+				}
+			#endif
+
+#if IR_Long_key | long_key_
+			switch( IR_KEY_L_deal )
+			{
+				/*
+				case 51:
+					short_mode_init_F = 0;
+					g_comval_sensitivity -- ;
+					break;
+				case 53:
+					short_mode_init_F = 0;
+					g_comval_sensitivity ++ ;
+					break;
+				case 101:
+					short_mode_init_F = 0;
+					led_speed -- ;
+					break;
+				case 103:
+					short_mode_init_F = 0;
+					led_speed ++ ;
+					break;
+				*/
+				case 201:
+					if( led_level >= led_level_Max )
+						led_level = led_level_Max;
+					else
+						led_level ++  ;
+					Color_INIT_LEVEL_TAB();
+					break;
+				case 203:
+					if( led_level <= led_level_Min)
+						led_level = led_level_Min;
+					else
+						led_level -- ;
+					Color_INIT_LEVEL_TAB();
+					break;
+				case 251:
+					if( led_mode <= Color_mode_YW_Max - 1 )
+						led_mode++;
+					Color_INIT_LEVEL_TAB();
+					break;
+
+				case 253:
+					if( led_mode )
+						led_mode--;
+					Color_INIT_LEVEL_TAB();
+					break;
+				default: 
+					break;
+			}
+#endif
+		disgint;
+
+		if( IR_LED_ON_F )
+		{
+			if( Flash_warning == 0 )
+			{
+#if YW_Color
+				if( LED_W_PWM_temp > LED_W_PWM_expect )			LED_W_PWM_temp--;	
+				else if( LED_W_PWM_temp < LED_W_PWM_expect ) 	LED_W_PWM_temp++;
+
+				if( LED_Y_PWM_temp > LED_Y_PWM_expect )			LED_Y_PWM_temp--;
+				else if( LED_Y_PWM_temp < LED_Y_PWM_expect )	LED_Y_PWM_temp++;
+#endif
+
+#if RGB_Color//
+				 if( LED_R_PWM_temp > LED_R_PWM_expect )		LED_R_PWM_temp--;
+				else if( LED_R_PWM_temp < LED_R_PWM_expect )	LED_R_PWM_temp++;
+
+				 if( LED_G_PWM_temp > LED_G_PWM_expect )		LED_G_PWM_temp--;
+				else if( LED_G_PWM_temp < LED_G_PWM_expect )	LED_G_PWM_temp++;
+				
+				 if( LED_B_PWM_temp > LED_B_PWM_expect )		LED_B_PWM_temp--;
+				else if( LED_B_PWM_temp < LED_B_PWM_expect )	LED_B_PWM_temp++;
+#endif
+			}
+		}
+		else
+		{
+#if YW_Color//
+			if ( LED_W_PWM_temp )		LED_W_PWM_temp--;
+			if ( LED_Y_PWM_temp )		LED_Y_PWM_temp--;	
+#endif
+
+#if RGB_Color//
+			if ( LED_R_PWM_temp )		LED_R_PWM_temp--;
+			if ( LED_G_PWM_temp )		LED_G_PWM_temp--;
+			if ( LED_B_PWM_temp )		LED_B_PWM_temp--;
+#endif
+		}	
+			#if XL_Wuxian
+				if(ir_end_f)
+				{
+				#if XL_wuxian_IR
+					if(ir_long_tick > 120)    //  160   ??????????120ms?????????????
+				#endif
+
+				#if XL_wuxian_433
+					if(ir_long_tick > 120)    //  160   ??????????120ms?????????????
+				#endif
+					{   
+						short_mode_init_F = 1;  			
+						switch( IR_KEY_L_deal )
+						{
+							case 200:
+								short_mode_init_F = 0;  
+								short_key_add();
+								break;
+							case 202:
+								short_mode_init_F = 0; 
+								short_key_sub(); 
+								break;
+							case 250:  //0x0C  
+								//if( fade_step == 0 )
+								{
+									if( led_mode >= led_mode_Max - led_mode_variety_range )  	led_mode = led_mode_Max;// LED_LEVEL_Max
+									else														led_mode += led_mode_variety_range;
+								}
+								break;   
+							case 252:  //0x0C  
+
+								//if( fade_step == 0 )
+								{
+									if( led_mode <= led_mode_Min + led_mode_variety_range )		led_mode = led_mode_Min;
+									else														led_mode -= led_mode_variety_range;
+								}
+								break;  
+						}
+						IR_KEY_L_deal = 0; 
+						ir_count = 0;
+						ir_end_f = 0;
+						ir_deal_F = 0;
+
+						ir_repeat_f = 0;
+						ir_long_tick   = 0;
+						IR_KEY_L = 0;
+						IR_SETP = 0;
+
+					#if XL_wuxian_433
+						IR_KEY_L1 = 0; 
+					#endif
+
+					#if XL_24C02		   
+						save_step = 1;//save_comval();
+					#endif
+					}
+				}
+			#endif
+//		disgint;
+	//	if( IR_LED_ON_F )
+		{
+		//	if( T_Key1_Signal && T_Key2_Signal )//  && T_Key3_Signal && T_Key4_Signal
+			{
+
+				
+			}
+		}
+
+#if XL_huancai 
+		if( guanji_RTC_mode_F == 0  && IR_LED_ON_F )
+		{
+	#if XL_HC_RGB_qicailiushui 
+				if( RTC_mode == 1 || RTC_mode == 2 )
+					HC_LED_qicailiushui_Mode1();
+				else if( RTC_mode == 3  ) // || RTC_mode == 3 Mic_7Color_fade_to_0()
+					Mic_7Color_fade_to_0();
+				else if( RTC_mode == 4 || RTC_mode == 5 || RTC_mode == 6 || RTC_mode == 7 )
+					XL_HC_music_VOL_deal();
+			//	else if( RTC_mode == 2  ) // || RTC_mode == 3
+				//	HC_LED_qicailiushui_Mode2();
+//				else// if( RTC_mode == 3  || RTC_mode == 12 ) // || RTC_mode == 3
+//					HC_LED_qicailiushui_Mode3();
+			//	else //if(  ( 4 <= RTC_mode  &&   RTC_mode <= 7 ) || RTC_mode == 9 ) // || RTC_mode == 3 ()
+				//	HC_LED_qicailiushui_Mode4();
+	#endif
+		}
+
+		if( Led_time_1ms_tick == 0    )  //led_speed Led_time_1ms_tick ON_F && IR_MIC_F == 2 22 
+		{
+			if( RTC_mode != 3 ||  guanji_RTC_mode_F  ) // || RTC_mode == 3 Mic_7Color_fade_to_0()
+			{
+				shuzu_paixu_deal();
+				if( IR_LED_ON_F )
+				{
+					if( ( RTC_mode == 1  || RTC_mode == 2 ) ||  guanji_RTC_mode_F )
+						shuzu_send_deal();
+				}
+			}
+		}
+#else
+
+	#if XL_RTC_MIC_huxi_255_to_0 
+						 if( RTC_mode == RTC_mode_Max + 4  ) // || RTC_mode == 3 Mic_7Color_fade_to_0()
+								Mic_7Color_fade_to_0();
+	#endif
+
+
+	#if XL_RTC_3JUMP | XL_RTC_7JUMP //XL_RTC_JUMP 
+						//if(  RTC_mode_huxi_Max + RTC_mode_fade_Max + RTC_mode_shan_Max + 1 <= RTC_mode &&  RTC_mode <= RTC_mode_huxi_Max + RTC_mode_fade_Max + RTC_mode_shan_Max + RTC_mode_jump_Max )
+						if( RTC_mode == 1 || RTC_mode == 2 || RTC_mode == RTC_mode_Max + 3 )
+							LED_7_JUMP_Mode();
+	#endif
+
+	#if XL_RTC_liushui_JUMP 
+						//if(  RTC_mode_huxi_Max + RTC_mode_fade_Max + RTC_mode_shan_Max + 1 <= RTC_mode &&  RTC_mode <= RTC_mode_huxi_Max + RTC_mode_fade_Max + RTC_mode_shan_Max + RTC_mode_jump_Max )
+						if( RTC_mode == 1  )
+							LED_liushui_JUMP();
+	#endif
+
+	#if XL_RTC_fade
+
+		#if 0//XL_RTC_3fade// 0
+						if( RTC_mode == 3 || RTC_mode == 4 || RTC_mode == RTC_mode_Max + 2 ) // 6 -- music1
+							LED_7_Fade_Mode();// LED_3_Fade_Mode
+		#endif
+
+		#if XL_RTC_7fade
+					//	if(  RTC_mode == 2 || RTC_mode == 3 )
+							//LED_7_Fade_Mode();
+		#endif
+
+	#endif
+
+	#if XL_RTC_Flash
+						if( RTC_mode == 5 )
+							LED_7_Flash_Mode();
+	#endif
+
+	#if XL_RTC_huxi | XL_RTC_MIC_huxi//
+						if( RTC_mode == RTC_mode_Max + 1 )
+							LED_7_huxi_Mode();
+	#endif
+
+#endif
+
+#endif
+
+extern void time_50us_tick_function(void);
+extern void PWM_strobe();
+
+extern byte led_color_255_1;
+
+extern byte time_led_speed_ms_tick; 
+extern byte long_key_speed_up;
+extern byte long_key_count;
+
+
+extern byte long_key_adjust_parameter_50us_tick;
+extern byte long_key_adjust_parameter_10ms_tick;
+extern byte AD_time_50us_tick;
+extern byte ir_long_tick_err;
+extern byte  Flash_warning;
+
+extern void short_key_add();  
+extern void short_key_sub();
+
+extern void short_speed_add();
+extern void short_speed_sub();
+
+extern void time_deal();
+
+extern byte time_50us_tick;
+extern byte time_1ms_tick;
+extern byte time_300ms_tick;
+extern byte time_10ms_tick;
+
+
+//extern byte Flag_time_led_10ms_tick;
+extern byte Flag_time_led_100ms_tick;
+
+
+extern bit kaiguanji_F; // 
+extern byte Led_time_1ms_tick; 
+extern byte Led_time_10ms_tick;
+
+extern word duima_1ms_tick;

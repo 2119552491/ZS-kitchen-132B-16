@@ -1,0 +1,48 @@
+
+#include "XL_common.h"
+
+#if XL_RTC_baoshan		   
+
+void LED_baoshan(); 
+
+void LED_baoshan() // RTC_1ms_tick && LED_Flash_warning_F == 0
+{
+	if( Led_time_1ms_tick >= 50  )  // Led_time_1ms_tick ON_F && IR_MIC_F == 2 22 
+	{
+		Led_time_1ms_tick= 0;
+	//	time_led_speed_ms_tick++;	// time_LED_LEVEL_Max_tick Led_time_1ms_tick
+
+	//	if ( time_led_speed_ms_tick >=  50  ) // 255 led_speed_Max led_level LED_LEVEL_Max RTC_mode_15_count
+		{
+	//		time_led_speed_ms_tick = 0;
+
+			Time_Count++;
+			if( Time_Count >= 6 + 1)
+			{
+			//	Time_Count = 0;
+				RTC_mode = 0; 
+				LED_R_PWM_expect = 0;
+				LED_G_PWM_expect = 0;
+				LED_B_PWM_expect = 0;
+			}
+			if( Time_Count <= 6 )
+			{
+				if( LED_R_PWM_expect == 0 )
+				{
+					LED_R_PWM_expect = led_level_Max;
+					LED_G_PWM_expect = led_level_Max;
+					LED_B_PWM_expect = led_level_Max;
+				}
+				else
+				{
+					LED_R_PWM_expect = 0;
+					LED_G_PWM_expect = 0;
+					LED_B_PWM_expect = 0;
+				}
+			}
+
+		}
+	}
+}
+
+#endif

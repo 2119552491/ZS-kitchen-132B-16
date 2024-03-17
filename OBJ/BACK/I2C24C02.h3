@@ -1,0 +1,29 @@
+﻿
+
+extern byte led_order_F;
+
+extern byte a1;
+extern byte a2;
+extern byte a3;
+//extern byte I2C_CRC;
+extern byte i;
+extern byte I2C_dat;
+extern byte  download_init_A5;//只下载一次初始值的标记
+
+//extern bit shangdian_F;
+
+extern byte led_order_F;  // ����R_G_B  pin��˳��
+extern void Delay10ms();
+extern void Delay1ms();
+extern void Start();
+extern void Stop();
+extern void Read8Bit();
+extern void Write8Bit();
+extern void read_comval();
+extern void save_comval();
+extern void At24C02Read1();
+extern void At24C02Write1();
+extern void At24C02_init();
+extern void Delay1ms(void);
+
+extern void Delay10us(void);

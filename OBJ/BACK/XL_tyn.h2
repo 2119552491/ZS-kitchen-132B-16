@@ -1,0 +1,8 @@
+
+
+extern byte tyn_tick1;
+
+extern byte tyn_tick2;
+
+extern void tyn_scan();
+extern void T_Key1_Func(void); //  on -  off

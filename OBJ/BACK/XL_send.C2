@@ -1,0 +1,223 @@
+
+#include "XL_common.h"
+
+byte led_num;
+
+//byte send_time_count;
+byte send_count;
+void HC_INIT_LEVEL_TAB_send();
+void send_all_byte();
+
+void send_one_byte()
+{
+	byte send_long = 8;
+
+SEND_BYTE1_LOOP:
+
+	if( send_long )
+	{
+		if( led_level_temp & 0x80 )
+			GOTO SEND_BYTE1_BIT_H;
+	}
+	else
+	{
+		return;
+	}
+
+SEND_BYTE1_BIT_L:
+	WS2812_IO = 1;// 250ns
+
+#if SYSCLK_8M		   
+	WS2812_IO = 1;// 250ns
+#endif
+
+	WS2812_IO = 0;// 750ns
+	led_level_temp = led_level_temp<<1;
+	send_long--;
+	GOTO SEND_BYTE1_LOOP;
+
+SEND_BYTE1_BIT_H:
+
+	WS2812_IO = 1;// 250ns
+	WS2812_IO = 1;// 250ns
+	WS2812_IO = 1;// 250ns
+
+#if SYSCLK_8M		   
+	WS2812_IO = 1;// 250ns
+	WS2812_IO = 1;// 250ns
+	WS2812_IO = 1;// 250ns
+#endif
+
+
+	WS2812_IO = 0;// 750ns
+	led_level_temp = led_level_temp<<1;
+	send_long--;
+	GOTO SEND_BYTE1_LOOP;
+
+}
+
+#if XL_huancai		   
+
+
+
+/*
+byte send_data_table[ send_data_table_num + send_data_table_num + send_data_table_num ]; // 81 send_data_table
+
+word point_send_data_table1;
+word point_send_data_table2;
+*/
+void send_three_byte ();
+
+
+void send_all_byte() 
+{
+	disgint;
+		   
+	LED_num = LED_num_MAX;
+
+	while( LED_num -- )
+	{ 
+		send_three_byte (); // send_one_cur_adc   INIT_LEVEL_TAB
+	}
+	engint;
+}
+
+void send_000()
+{
+	disgint;
+
+	LED_num = LED_num_MAX ;
+	while( LED_num -- )
+	{
+		led_level_temp = 0;
+		send_one_byte(  );// 
+		led_level_temp = 0;
+		send_one_byte(  );// 
+		led_level_temp = 0;
+		send_one_byte(  );// 
+	}
+	engint;
+}
+
+
+void send_three_byte()
+{
+//	disgint;
+#if XL_send_GRB
+		led_level_temp = LED_G_PWM_expect ;
+		send_one_byte(  );// 
+		led_level_temp = LED_R_PWM_expect;
+		send_one_byte(  );// 
+		led_level_temp = LED_B_PWM_expect;
+		send_one_byte(  );//
+#endif
+
+#if XL_send_BRG
+		led_level_temp = LED_B_PWM_expect;
+		send_one_byte(  );// 
+		led_level_temp = LED_R_PWM_expect;
+		send_one_byte(  );// 
+		led_level_temp = LED_G_PWM_expect;
+		send_one_byte(  );// 
+#endif
+
+#if XL_time_Sleep		   
+		Sleep_time_50us_tick+=2;
+#endif
+
+//	engint;
+}
+
+
+
+void send_byte_deal()
+{
+//	if( Color_mode )
+	{
+		//disgint;
+#if XL_send_GRB
+		a=Color_mode;
+		G_LED_Color_LEVEL_TABLE(); // LED_W_PWM = 0;
+		XL_temp_count = a ;
+		LED_PWM_16_LEVEL_TABLE();
+		LED_G_PWM_expect = led_level_temp;
+		//send_one_byte();//
+
+		a=Color_mode;
+		R_LED_Color_LEVEL_TABLE(); // LED_W_PWM = 0;
+		XL_temp_count = a ;
+		LED_PWM_16_LEVEL_TABLE();
+		LED_R_PWM_expect = led_level_temp;
+		//send_one_byte();//
+
+		a=Color_mode;
+		B_LED_Color_LEVEL_TABLE(); // LED_W_PWM = 0;
+		XL_temp_count = a ;
+		LED_PWM_16_LEVEL_TABLE();
+		LED_B_PWM_expect = led_level_temp;
+	//	send_one_byte();//
+#endif
+		//engint;
+	}
+}
+
+	 
+void HC_INIT_LEVEL_TAB_send()
+{
+	if( Color_mode )
+	{
+//		disgint;
+#if XL_send_GRB
+		a=Color_mode;
+		G_LED_Color_LEVEL_TABLE(); // LED_G_PWM_expect = 0;
+		XL_temp_count = a ;
+		LED_PWM_16_LEVEL_TABLE();
+//		LED_G_PWM_expect = led_level_temp;
+		send_one_byte();//
+
+		a=Color_mode;
+		R_LED_Color_LEVEL_TABLE(); // WS2812_IO_PWM = 0;
+		XL_temp_count = a ;
+		LED_PWM_16_LEVEL_TABLE();
+//		WS2812_IO_PWM = led_level_temp;
+		send_one_byte();//
+
+		a=Color_mode;
+		B_LED_Color_LEVEL_TABLE(); // LED_B_PWM_expect = 0;
+		XL_temp_count = a ;
+		LED_PWM_16_LEVEL_TABLE();
+//		LED_B_PWM_expect = led_level_temp;
+		send_one_byte();//
+#endif
+
+#if XL_send_BRG
+		a=Color_mode;
+		B_LED_Color_LEVEL_TABLE(); // LED_B_PWM_expect = 0;
+		XL_temp_count = a ;
+		LED_PWM_16_LEVEL_TABLE();
+//		LED_B_PWM_expect = led_level_temp;
+		send_one_byte();//
+
+		a=Color_mode;
+		R_LED_Color_LEVEL_TABLE(); // WS2812_IO_PWM = 0;
+		XL_temp_count = a ;
+		LED_PWM_16_LEVEL_TABLE();
+//		WS2812_IO_PWM = led_level_temp;
+		send_one_byte();//
+
+		a=Color_mode;
+		G_LED_Color_LEVEL_TABLE(); // LED_G_PWM_expect = 0;
+		XL_temp_count = a ;
+		LED_PWM_16_LEVEL_TABLE();
+//		LED_G_PWM_expect = led_level_temp;
+		send_one_byte();//
+#endif
+
+#if XL_time_Sleep		   
+		Sleep_time_50us_tick+=3;
+#endif
+//		engint;
+	}
+}
+
+#endif

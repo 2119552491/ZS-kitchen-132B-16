@@ -1,0 +1,397 @@
+
+#include "common.h"
+
+byte LED_R_PWM_expect;
+byte LED_G_PWM_expect;
+byte LED_B_PWM_expect;
+
+byte led_level_temp;
+
+byte RTC_mode;
+byte Color_mode;
+//byte Color_mode_temp;
+byte led_mode;
+
+byte led_level;
+byte LED_duty;
+bit led_level_init_F;
+
+byte led_level_count;
+/*
+byte led_level_adjust_temp;
+*/
+byte led_speed;
+
+byte XL_temp_count;
+/*
+byte R_Color_Level;
+byte G_Color_Level;
+byte B_Color_Level;
+
+*/
+
+void LED_PWM_LEVEL_TABLE(void); 
+
+void R_LED_Color_LEVEL_TABLE();
+void G_LED_Color_LEVEL_TABLE();
+void B_LED_Color_LEVEL_TABLE();
+
+byte led_level_255_1;
+
+byte led_level_16_2;
+
+byte led_level_16_4;
+
+byte led_level_16_6;
+
+byte led_level_16_8;
+
+byte led_level_16_10;
+
+byte led_level_16_12;
+
+byte led_level_16_14;
+
+byte led_level_16_5;
+byte led_level_16_3;
+byte led_level_16_7;
+byte led_level_16_9;
+byte led_level_16_11;
+byte led_level_16_13;
+byte led_level_16_15;
+
+byte RTC_led_level;
+
+#if XL_led_Color
+
+
+void R_LED_Color_LEVEL_TABLE()
+{
+	a += 1;
+	pcadd a;
+	ret 0//0
+
+	ret 16//1 
+	ret 0// 2 
+	ret 0// 3  
+	ret 16//4  
+	ret 16//5 
+	ret 16//6 
+	ret 0// 7 
+	ret 16//8 
+}
+
+void G_LED_Color_LEVEL_TABLE()
+{
+	a += 1;
+	pcadd a;
+	ret 0//255 
+
+	ret 0//1  
+	ret 16//2 
+	ret 0//3 
+	ret 16//4 
+	ret 8//5  
+	ret 16//6 
+	ret 0//7 
+	ret 0//8 
+
+}
+
+void B_LED_Color_LEVEL_TABLE()
+{
+	a += 1;
+	pcadd a;
+	ret 0//255 
+
+	ret 0//1 
+	ret 0//2  
+	ret 16//3 
+	ret 16//4 
+	ret 0//5 
+	ret 0//6 
+	ret 16//7 
+	ret 16//8  
+}
+
+#endif
+
+void LED_PWM_4_LEVEL_TABLE()
+{
+		switch(XL_temp_count)
+		{
+			case 0: 
+				led_level_temp = 0;
+				break;
+			case 4:
+				led_level_temp = led_level_16_4;
+				break;
+			case 8:
+				led_level_temp = led_level_16_8;
+				break;
+			case 12:
+				led_level_temp = led_level_16_12;  
+				break;
+			case 16:
+				led_level_temp = RTC_led_level ; 
+				break;
+			default:
+				break;
+		}
+}
+
+void LED_PWM_16_LEVEL_TABLE()
+{
+		switch(XL_temp_count)
+		{
+			case 0: 
+				led_level_temp = 0;
+				break;
+			case 1:
+				led_level_temp = led_level_255_1;
+				break;
+			case 2:
+				led_level_temp = led_level_16_2;
+				break;
+			case 3:
+				led_level_temp = led_level_16_3;
+				break;
+			case 4:
+				led_level_temp = led_level_16_4;
+				break;
+			case 5:
+				led_level_temp = led_level_16_5;
+				break;
+			case 6:
+				led_level_temp = led_level_16_6;
+				break;
+			case 7:
+				led_level_temp = led_level_16_7;
+				break;
+			case 8:
+				led_level_temp = led_level_16_8;
+				break;
+			case 9:
+				led_level_temp = led_level_16_9;
+				break;
+			case 10:
+				led_level_temp = led_level_16_10; 
+				break;
+			case 11:
+				led_level_temp = led_level_16_11; 
+				break;
+			case 12:
+				led_level_temp = led_level_16_12;  
+				break;
+			case 13:
+				led_level_temp = led_level_16_13;  
+				break;
+			case 14:
+				led_level_temp = led_level_16_14;  
+				break;
+			case 15:
+				led_level_temp = led_level_16_15; 
+				break;
+			case 16:
+				led_level_temp = RTC_led_level ; 
+				break;
+			default:
+				break;
+		}
+}
+
+void send_byte_deal()
+{
+//	if( Color_mode )
+	{
+		//disgint;
+/* 
+		if( led_mode != Color_mode_Max  + 3 )
+			RTC_led_level = led_level;*/
+		if( RTC_led_level >= 254 )
+			led_level_255_1 = 16;
+		else
+			led_level_255_1 = ( RTC_led_level + 1 ) >> 4; // + 8 led_level_255_1
+
+		led_level_16_2  = led_level_255_1+ led_level_255_1;
+		led_level_16_3  = led_level_16_2 + led_level_255_1;
+		led_level_16_4  = led_level_16_3 + led_level_255_1;
+		led_level_16_5  = led_level_16_4 + led_level_255_1;
+		led_level_16_6  = led_level_16_5 + led_level_255_1;
+
+		led_level_16_7  = led_level_16_6 + led_level_255_1;
+		led_level_16_8  = led_level_16_7 + led_level_255_1;
+		led_level_16_9  = led_level_16_8 + led_level_255_1;
+		led_level_16_10 = led_level_16_9 + led_level_255_1;
+
+		led_level_16_11  = led_level_16_10 + led_level_255_1;
+		led_level_16_12  = led_level_16_11 + led_level_255_1;
+		led_level_16_13  = led_level_16_12 + led_level_255_1;
+		led_level_16_14  = led_level_16_13 + led_level_255_1;
+		led_level_16_15  = led_level_16_14 + led_level_255_1;
+
+		a=Color_mode;
+		R_LED_Color_LEVEL_TABLE(); // LED_W_PWM = 0;
+		XL_temp_count = a ;
+		LED_PWM_16_LEVEL_TABLE();
+		LED_R_PWM_expect = led_level_temp;
+		//send_one_byte();//
+
+		a=Color_mode;
+		G_LED_Color_LEVEL_TABLE(); // LED_W_PWM = 0;
+		XL_temp_count = a ;
+		LED_PWM_16_LEVEL_TABLE();
+		LED_G_PWM_expect = led_level_temp;
+		//send_one_byte();//
+
+		a=Color_mode;
+		B_LED_Color_LEVEL_TABLE(); // LED_W_PWM = 0;
+		XL_temp_count = a ;
+		LED_PWM_16_LEVEL_TABLE();
+		LED_B_PWM_expect = led_level_temp;
+
+		//engint;
+	}
+}
+
+/*
+void R_LED_Color_LEVEL_TABLE()
+{
+	a += 1;
+	pcadd a;
+	ret 0//255  1
+
+	ret 16//255  
+	ret 16//255  
+	ret 16//255  
+	ret 16//255  
+	ret 16//255  5+1
+
+	ret 0//255 
+	ret 0//255 
+	ret 0//255 
+	ret 0//255 
+	ret 0//255 5+1+5
+
+	ret 0//255  
+	ret 4//255  
+	ret 8//255  
+	ret 12//255  
+	ret 16//255  5+1+5+5
+
+	ret 16//255  16
+
+	ret 8//21  17 
+	ret 13//21  18 
+
+	ret 13//21  19
+	ret 1//21  20
+	ret 5//19 
+	ret 8//19
+}
+
+void G_LED_Color_LEVEL_TABLE()
+{
+	a += 1;
+	pcadd a;
+	ret 0//255 
+
+	ret 0//255  
+	ret 4//255  
+	ret 8//255  
+	ret 12//255  
+	ret 16//255  
+
+	ret 16//255  
+	ret 16//255  
+	ret 16//255  
+	ret 16//255  
+	ret 16//255 
+
+	ret 0//255 
+	ret 0//255 
+	ret 0//255 
+	ret 0//255 
+	ret 0//255 
+
+	ret 16//16  
+
+	ret 0//17 
+	ret 9//18 
+
+	ret 9//19 
+	ret 10//20
+	ret 16//20
+	ret 0//20
+}
+
+void B_LED_Color_LEVEL_TABLE()
+{
+	a += 1;
+	pcadd a;
+	ret 0//255 
+
+	ret 0//255 
+	ret 0//255 
+	ret 0//255 
+	ret 0//255 
+	ret 0//255  
+
+	ret 0//255  
+	ret 4//255  
+	ret 8//255  
+	ret 12//255  
+	ret 16//255  
+
+	ret 16//255  
+	ret 16//255  
+	ret 16//255  
+	ret 16//255  
+	ret 16//255  
+
+	ret 16//16  
+
+	ret 8//17 
+	ret 0//18 
+
+	ret 0//19 
+	ret 0//20 
+	ret 16//20 
+	ret 8//20 
+}
+
+
+void LED_Color_LEVEL_TABLE() 
+{
+	a += 1;
+	pcadd a;
+	ret 10//0 
+
+	ret 10//1  
+	ret 10//2 
+	ret 75//3 
+	ret 100//4  
+	ret 125//5  
+	ret 150//6  
+	ret 175//7  
+	ret 255//8  
+}
+
+void LED_Color_LEVEL_TEMP_TABLE()
+{
+	a += 1;
+	pcadd a;
+	ret 4//0  
+
+	ret 4//1  
+	ret 9//2  
+	ret 14//3  
+	ret 19//4  
+	ret 24//5  
+	ret 29//6  
+	ret 34//7  
+	ret 39//8  
+	ret 44//9  
+	ret 49//10  
+}
+*/

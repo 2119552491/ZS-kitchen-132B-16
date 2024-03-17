@@ -1,0 +1,218 @@
+﻿
+
+#include "XL_common.h"
+
+#if XL_Wuxian
+
+#if RGB_Color 
+void IR_Key_Table();
+#define key_mode_init_L 8
+
+#if XL_wuxian_IR
+	#define ir_count_repeat 3
+#endif
+
+#if XL_wuxian_433
+	#define ir_count_repeat 6
+#endif
+
+
+/*
+IR_KEY_L_deal 
+
+250   short_IR_key add color
+251    long_IR_key add color
+252   short_IR_key sub color
+253    long_IR_key sub color
+
+200   short_IR_key add light
+201    long_IR_key add light
+202   short_IR_key sub light
+203    long_IR_key sub light
+
+100   short_IR_key add speed
+101    long_IR_key add speed
+102   short_IR_key sub speed
+103    long_IR_key sub speed
+
+50   short_IR_key add MIC_LMD
+51    long_IR_key add MIC_LMD
+52   short_IR_key sub MIC_LMD
+53    long_IR_key sub MIC_LMD
+*/
+
+void IR_KEY_DEAL()  //
+{         
+	byte key_loop_time = 0;
+
+	if ( ir_ok_F == 0 )
+		return;
+	ir_ok_F = 0;  	
+	
+	if (ir_count >= ir_count_repeat )
+	{
+	//	ir_count = ir_count_repeat;
+		#if XL_wuxian_duima & 0//IC_PMS152
+			IR_Dui_Ma_DEAL();  	//	duima
+		#endif
+
+		return;
+	}
+	ir_count++; // 
+
+	if (ir_deal_F == 1)
+		return;
+	ir_deal_F = 1;  
+
+#if XL_wuxian_duima & 0//IC_PMS152
+	if ( ADDR_H != ADDR_H_check  ) // 0x55 0xE2 0xE2 0xFF 0xBA 0xFF  0x12 0x00 0xE2
+		return;			 //   0x28
+	if ( ADDR_L != ADDR_L_check  ) //0xFF  0xFB 0xFF 0x21 0xFB  0xF6 0xCF 0xEF 0xFB
+		return;			 // 
+#endif
+
+#if IR_KEY_L_ON_OFF
+	if( IR_KEY_L == IR_KEY_L_ON )      // 0x25 short_mode_init_F = 1;
+	{
+		if( IR_LED_ON_F )	IR_LED_ON_F = 0;
+		else				IR_LED_ON_F = 1;  // Color_mode = led_mode;
+	}  
+#else
+	if( IR_KEY_L == IR_KEY_L_OFF )    IR_LED_ON_F = 0;   // 0x25
+	if( IR_KEY_L == IR_KEY_L_ON )     IR_LED_ON_F = 1;// 0x25
+#endif
+//	disgint;
+	if( IR_LED_ON_F )      // 0x25
+	{  
+#if 1 
+		disgint;
+#if XL_wuxian_cabiao
+		while(1)
+		{
+			key_loop_time++;
+			if( key_loop_time == 3 || key_loop_time == 5+3 || key_loop_time == 5+5+3  )
+				key_loop_time++;
+			a = key_loop_time;
+			IR_Key_Table();
+			if(IR_KEY_L==a)
+			{
+				if( key_loop_time <= 16)
+				{
+					led_mode = key_loop_time;
+					//Color_mode = Color_mode + Color_mode + Color_mode; // short_mode_init_F = 1;
+					RTC_mode =0; // LED_W
+				}
+				else if( key_loop_time <= 20)
+				{
+					Color_mode = 0;
+					// short_mode_init_F = 1;
+					RTC_mode = key_loop_time - 16 ; // LED_W
+				}
+			}	
+			if(key_loop_time >= 20 + 1 - 1 )
+			{
+				break;
+			}
+		}
+#endif
+		switch( IR_KEY_L )
+		{                  
+				break;   
+#if led_speed_add_sub 
+			case IR_KEY_L_levle_add:  //0x0C  IR_KEY_L_speed_add
+				short_key_add();
+#endif
+				//IR_KEY_L_deal = 200; 
+#if IR_Long_key
+
+				ir_deal_F = 0;  
+				if(ir_count >= ir_count_repeat - 1) //
+				{
+					IR_KEY_L_deal  = 201;
+				}
+
+#endif
+				break;   
+#if level_add_sub
+			case IR_KEY_L_levle_sub: //   0x0B
+				short_key_sub();
+#endif
+				//IR_KEY_L_deal = 202; 
+
+#if IR_Long_key
+
+				ir_deal_F = 0;       
+				if(ir_count >= ir_count_repeat - 1) //
+				{
+					IR_KEY_L_deal  = 203;
+				}
+
+#endif
+				break;  
+		}
+		engint;
+#endif
+	}
+}
+
+
+#if 1//IR_Long_key
+void IR_Key_Table()
+{
+	a += 1;
+	pcadd a;
+	ret 0 + 0  + 0  + 0
+
+	ret 0x07 + 0  + 0  + 0
+	ret 0x0A + 0  + 0  + 0
+	ret 0x0D + 0  + 0  + 0
+	ret 0x0D + 0  + 0  + 0
+	ret 0x10 + 0  + 0  + 0
+
+
+	ret 0x07 + 1  + 0  + 0
+	ret 0x0A + 1  + 0  + 0
+	ret 0x0D + 1  + 0  + 0
+	ret 0x0D + 1  + 0  + 0
+	ret 0x10 + 1  + 0  + 0
+
+
+	ret 0x07 + 1  + 1  + 0
+	ret 0x0A + 1  + 1  + 0
+	ret 0x0D + 1  + 1  + 0
+	ret 0x0D + 1  + 1  + 0
+	ret 0x10 + 1  + 1  + 0
+
+	ret 0x06
+
+	ret 0x13
+	ret 0x14
+	ret 0x15
+
+
+/*
+	ret 0x17
+	ret 0x12
+	ret 0x40
+
+	ret 0x4C
+	ret 0x0A
+	ret 0x1E
+
+
+
+
+	ret 0x19
+	ret 0x1b
+	ret 0x11
+
+	ret 0x1C
+	ret 0x16
+	ret 0x04
+
+	ret 0xFF
+*/
+}
+#endif
+#endif
+#endif

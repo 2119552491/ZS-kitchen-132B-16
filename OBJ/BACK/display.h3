@@ -1,0 +1,13 @@
+
+
+extern void RTC_mode_1_time_deal( );
+extern void RTC_mode_2_time_deal( );
+extern void send_time_deal( );
+
+extern void RTC_mode_13_time_deal( );
+extern void RTC_mode_11_time_deal( );
+extern void RTC_mode_4_time_deal( );
+extern void RTC_mode_11_time_deal( );
+extern void RTC_mode_9_time_deal( );
+extern void RTC_mode_10_time_deal();
+extern void temp_deal_2();

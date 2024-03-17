@@ -1,0 +1,382 @@
+
+
+#include "XL_common.h"
+
+void Led_mode_deal(); // MIN_
+
+bit short_mode_init_F; //  send_time_count
+
+//byte Time_Count;
+
+//bit fuwei_fade_F;
+
+#if RGB_Color | YW_Color
+
+void Color_INIT_LEVEL_TAB();
+//bit fuwei_fade_F;
+void Color_INIT_LEVEL_TAB()
+{
+//	if( Color_mode )
+	/*
+	if( led_mode <= Color_mode_YW_Max)
+	{
+		LED_R_PWM_expect = 0;
+		LED_G_PWM_expect = 0;
+		LED_B_PWM_expect = 0;
+
+		LED_Y_PWM_expect = 0;
+		LED_W_PWM_expect = 0;
+		{
+			//led_mode_YW = led_mode  ; 
+
+			temp_byte_value = led_mode ;
+
+			while( temp_byte_value -- )
+				XL_temp_count += led_level;
+
+			XL_temp_count    = XL_temp_count >> 6;//
+			if( XL_temp_count >= led_level )
+				XL_temp_count = led_level;
+
+			LED_W_PWM_expect = XL_temp_count;
+			LED_Y_PWM_expect = led_level - LED_W_PWM_expect;// >> 6; 
+
+		}
+	}*/
+//	else //if( led_mode > Color_mode_RGB_Max)
+	{
+//		LED_W_PWM_expect = 0;
+//		LED_Y_PWM_expect = 0;// >> 6; 
+	/*
+		if( RTC_led_level >= led_level_Max )
+			led_level_1_16 = 16;
+		else*/
+			RTC_led_level  =  led_level;
+			led_level_1_16 = (RTC_led_level  ) >>4;
+
+		{
+	/*
+			if( led_mode_RGB <= Color_mode_Max )
+			{
+					RTC_led_level = led_level;
+			}
+			else
+			{
+				if( led_mode_RGB != Color_mode_Max + RTC_mode_Max +  3   )// ||  guanji_RTC_mode_F
+					RTC_led_level = led_level;
+			}
+	*/
+		//	led_mode_RGB   = led_mode;
+			Color_mode = led_mode  ;
+
+			a=Color_mode;
+			R_LED_Color_LEVEL_TABLE(); // LED_W_PWM = 0;
+			temp_byte_value = a ;
+			LED_PWM_16_LEVEL_TABLE();
+			LED_R_PWM_expect = led_level_temp;
+		//	LED_R_PWM_expect = led_level_Max - led_level_temp;
+
+			a=Color_mode;
+			G_LED_Color_LEVEL_TABLE(); // LED_W_PWM = 0;
+			temp_byte_value = a ;
+			LED_PWM_16_LEVEL_TABLE();
+			LED_G_PWM_expect = led_level_temp;
+
+			a=Color_mode;
+			B_LED_Color_LEVEL_TABLE(); // LED_W_PWM = 0;
+			temp_byte_value = a ;
+			LED_PWM_16_LEVEL_TABLE();
+			LED_B_PWM_expect = led_level_temp;
+	//		engint;
+		}
+	}
+}
+
+#endif
+
+void Led_mode_deal()
+{
+	if( IR_LED_ON_F  )  // || Power_F 
+//	else//if( IR_LED_ON_F   )  // || Power_F == 0
+	{
+		if(  short_mode_init_F == 1 )  // ON_F  short_mode_init_F = 1  long_mode_init_F short_mode_init_F
+		{
+		//	disgint; 
+
+			short_mode_init_F = 0;
+			time_1ms_tick = 0;
+			time_10ms_tick = 0;
+			time_100ms_tick = 0;
+
+			Sleep_time_10ms_tick = 0;
+
+			Sleep_time_100ms_tick = 0;
+			Sleep_time_1s_tick = 0;
+			Sleep_time_1min_tick = 0;
+/*
+		//	fangxiang 		  		  = 0;
+			time_led_speed_ms_tick 	  = 0;  
+			Led_time_1ms_tick 	  	  = 1; 
+		//	time_300ms_tick 		  = 1; 
+			time_10ms_tick			  = 1; 
+
+//			Time_Count 				  = 1;
+			Color_mode 		= led_mode;
+			Color_INIT_LEVEL_TAB();
+*/
+		//	engint;
+		}
+	}
+}
+
+#if  0
+
+#include "XL_common.h"
+
+void Led_mode_deal(); // MIN_
+
+bit short_mode_init_F; //  send_time_count
+
+
+#if RGB_Color // 0
+	byte Time_Count , Time_Count_fade;
+	byte step_1_value;
+#endif
+
+#if XL_huancai // 0
+//	byte step_2_value;
+//	byte step_3_value;
+///	byte step_4_value;
+#endif
+
+void Led_mode_deal()
+{
+	#if XL_Sleep_time 
+		if( sleep_mode_init_F == 1 )
+		{
+			sleep_mode_init_F = 0;
+		
+		//	Sleep_time_50us_tick = 0;
+			Sleep_time_10ms_tick = 0;
+			Sleep_time_1s_tick   = 0;
+			Sleep_time_1min_tick = 0;
+		}
+	#endif
+#if XL_huancai // 0
+	if( IR_LED_ON_F == 1 )  // ON_F  led_level_init_F
+	{
+		MOS = 1;
+	}
+	else
+	{
+		MOS = 0;
+	}
+#endif
+	if( IR_LED_ON_F == 0  )  // || Power_F 
+	{
+/*
+		PAC = 0x06;
+		PBC = 0x00;
+*/
+#if XL_huancai 
+		send_000();
+#endif
+
+//		pow_led = 1;
+//		JDQ = 0;
+
+#if RGB_Color
+		LED_R_PWM_expect_fade = 0  ;//led_level_Max
+		LED_G_PWM_expect_fade = 0;
+		LED_B_PWM_expect_fade = 0;
+
+
+		LED_R_PWM_temp   = 0  ;//led_level_Max
+		LED_G_PWM_temp   = 0;
+		LED_B_PWM_temp   = 0;
+#endif
+
+	//	LED_power = 0;
+	//	jiare 	  = 0;
+
+#if W_Color
+		LED_W_PWM_expect = 0;
+		LED_W_PWM_temp   = 0;
+#endif
+
+
+#if YW_Color
+		LED_Y_PWM = 0;
+#endif
+	//	MOS = 1;
+		/*
+		U1_2 = 0;
+		Motor = 0;
+*/
+	}
+//	else
+#if RGB_Color
+	{
+//		pow_led = 0;
+//		JDQ = 1;
+	//	LED_power = 1;
+		//jiare 	  = 1;
+
+//	if( Power_F == 1  )
+//	if( IR_LED_ON_F   )  // || Power_F == 0
+//	{
+		if(  short_mode_init_F == 1 )  // ON_F  short_mode_init_F = 1  long_mode_init_F short_mode_init_F
+		{
+			short_mode_init_F = 0; 
+
+			
+#if led_mode_max_limit
+			if( led_mode >= Color_mode_Max + RTC_mode_Max + MIC_mode_Max + RTC_mode_auto_Max + 1)//  ) // 8 + 1 + 1
+				led_mode =   1;
+#endif
+			disgint;
+
+
+#if XL_HC_RGB_qicailiushui_fangxiang  
+			fangxiang 		  		  = 0;
+#endif 
+
+#if XL_RTC_huxi	| XL_RTC_MIC_huxi | XL_RTC_MIC_Flash | XL_RTC_Flash
+			decrease_F 		  		  = 0;
+#endif
+
+#if XL_RTC_MIC_huxi_255_to_0
+				mic_mode_F = 1;
+#endif
+
+			led_level = led_level_Max;
+
+			time_led_speed_ms_tick 	  = 0;  
+			Led_time_1ms_tick 	  	  = 1; 
+			time_10ms_tick			  = 1; 
+
+#if RTC_mode_auto_Max
+			time_300ms_tick 		  = 1; 
+#endif
+
+
+			Time_Count 				  = 1;
+			Time_Count_fade			  = 1;
+			step_1_value 	 		  = 0;
+#if XL_huancai // 0
+//			step_2_value   		 	  = 0;
+//			step_3_value			  = 0;
+//			step_4_value			  = 0;
+#endif
+			if( led_mode <= Color_mode_Max  )
+			{
+/*
+				#if 1//XL_RTC_JUMP
+					a = led_mode  ;// Color_mode_RGB_Max
+					LED_7_JUMP_Mode_TABLE();//      IR_Key_Table(); IR_Key_Color_Table
+					Color_mode  = a;// short_mode_init_F = 1;
+				#else
+						Color_mode  = led_mode;
+				#endif
+				
+				Color_INIT_LEVEL_TAB();
+
+				LED_R_PWM_temp = LED_R_PWM_expect;
+				LED_G_PWM_temp = LED_G_PWM_expect;
+				LED_B_PWM_temp = LED_B_PWM_expect;
+*/
+				LED_R_PWM_temp = 0;
+				LED_G_PWM_temp = led_level_Max;
+				LED_B_PWM_temp = 0;
+
+
+
+#if W_Color
+				LED_W_PWM_temp = led_level_Max;
+				LED_W_PWM	= 0;
+#endif
+				RTC_mode =0;
+			//	Color_INIT_LEVEL_TAB();
+#if YW_Color
+				LED_Y_PWM	= 0;
+
+#endif
+			}
+		//	if( led_mode <= Color_mode_RGB_Max + Color_mode_WY_Max )
+		//	{
+		//		Color_mode    =led_mode ; // short_mode_init_F = 1;
+	//			RTC_mode = 0;
+		//		if( IR_LED_ON_F )  // || Power_F 
+		//			Color_INIT_LEVEL_TAB();
+		//	}
+			else //if( led_mode <= Color_mode_Max + RTC_mode_Max + MIC_mode_Max) // 
+			{
+#if RTC_mode_auto_Max
+				if( led_mode == Color_mode_RGB_Max + RTC_mode_Max  )// MIC_mode_Max +
+				{
+					if( RTC_mode_auto_first_F == 0 ) 
+					{
+						RTC_mode_auto_first_F = 1;
+						RTC_mode = 1;
+						Color_mode  = 0;//LED_7_huxi_Mode();
+					}
+				}
+				else
+#endif
+				{
+					RTC_mode =led_mode - Color_mode_Max;
+				}
+
+				Color_mode 		= 1;
+#if 0
+				if( led_mode == Color_mode_Max + 2 )
+					Color_mode  = 1;
+				if( led_mode == Color_mode_Max + 3 )
+					Color_mode  = 1;
+#endif
+
+				Color_INIT_LEVEL_TAB();
+
+
+#if W_Color
+				LED_W_PWM_expect = 0;
+				if( led_mode == Color_mode_Max + 3 )
+				{
+					LED_G_PWM_expect = LED_R_PWM_expect;
+					LED_B_PWM_expect = LED_R_PWM_expect;
+					LED_W_PWM_expect = LED_R_PWM_expect;
+				}
+				LED_W_PWM_temp = 0;
+#endif
+
+				LED_R_PWM_expect_fade = LED_R_PWM_expect;
+				LED_G_PWM_expect_fade = LED_G_PWM_expect;
+				LED_B_PWM_expect_fade = LED_B_PWM_expect;
+
+				LED_R_PWM_temp = 0;
+				LED_G_PWM_temp = 0;
+				LED_B_PWM_temp = 0;
+
+			}
+
+#if XL_huancai // 0
+
+			//if( !( ( led_mode <= Color_mode_Max + 3 )  || ( led_mode == Color_mode_Max + 12 ) ) )
+			{
+				clean_shuzu_deal();
+			}
+
+			if( RTC_mode == 0 )
+			{
+				send_all_byte();
+			}
+#endif
+
+			engint;
+
+		}
+	}
+#endif
+}
+
+#endif

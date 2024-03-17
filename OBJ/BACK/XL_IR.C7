@@ -1,0 +1,286 @@
+﻿
+
+#include "XL_common.h"
+
+#define key_mode_init_L 8
+
+#if XL_wuxian_IR
+	#define ir_count_repeat 3
+#endif
+
+#if XL_wuxian_433
+	#define ir_count_repeat 6
+#endif
+
+#if 1
+
+void IR_DECODE();
+void IR_KEY_DEAL();
+void IR_Key_Table();
+
+byte IR_LED_ON_F;
+byte IR_KEY_L_deal;
+
+#if IR_Long_key
+
+#endif
+
+
+
+#if XL_Wuxian
+
+byte IR_SETP;
+byte ir_tick;
+byte ir_long_tick;
+
+bit ir_err_f;
+bit IR_H_F;
+bit ir_repeat_f;
+
+bit ir_ok_F;
+bit ir_deal_F;
+bit ir_end_F;
+byte ir_count;
+
+
+byte ADDR_H;
+byte ADDR_L;
+byte IR_KEY_L;
+
+#if  XL_wuxian_IR
+
+	byte ir_long_tick_err;
+	byte IR_KEY_H;
+
+#elif XL_wuxian_433
+
+	byte ir_tick_1ms;
+	byte IR_KEY_L1;
+
+#endif
+
+byte ir_data_temp;
+
+void IR_DECODE()
+{
+#if XL_wuxian_433
+	if (IR_in == 1)
+	{
+		if (!IR_H_F)
+		{
+			if (IR_SETP == 1)
+			{
+				if ((ir_tick_1ms > 7) && (ir_tick_1ms < 14) ) 	IR_SETP++;//  9MS   5.5-7MS 
+				else											ir_err_f = 1;	
+			}
+			else if ((IR_SETP >= 3) && (IR_SETP < 50))
+			{
+				if ((ir_tick >= 2) && (ir_tick < 45))   IR_SETP++;
+				else  									ir_err_f = 1;
+			}
+			ir_tick_1ms = 0;
+			ir_tick = 0;
+			IR_H_F = 1;
+		}
+	}
+	else
+	{
+		if (IR_H_F)
+		{
+			//ir_long_tick = 0;
+			if (IR_SETP == 0)     IR_SETP++;
+			else if ((IR_SETP >= 2) && (IR_SETP < 50))
+			{
+				if ((ir_tick >= 2) && (ir_tick < 45)) // 400-2MS IR_time_1mS_tick
+				{
+					IR_SETP++;
+/*
+					if (ir_tick > 18)
+					{
+					ir_data_temp = ir_data_temp | 0x01;  //80
+					}
+					else
+					{
+					ir_data_temp = ir_data_temp & 0xFE; //7f
+					}
+					if(IR_SETP==17)
+					{
+					 ADDR_H  = ir_data_temp;
+					}
+					else if(IR_SETP==33)
+					{
+					 ADDR_L = ir_data_temp;
+					}
+					else if( IR_SETP ==49 )
+					{
+					 IR_KEY_L = ir_data_temp;
+					}
+
+					ir_data_temp =ir_data_temp<<1;  //>>
+*/
+					//IR_KEY_H = IR_KEY_H >> 1;
+					IR_KEY_L = IR_KEY_L << 1;
+					ADDR_H = ADDR_H <<< 1;
+					ADDR_L = ADDR_L <<< 1;
+					if (ir_tick > 15)  		IR_KEY_L .0 = 1;
+					else					IR_KEY_L .0 = 0;
+
+					if (IR_SETP == 49)
+					{
+						if( (IR_KEY_L1 != IR_KEY_L ) )  IR_KEY_L1 = IR_KEY_L;
+						else
+						{
+							ir_end_f = 1;
+							ir_ok_F = 1;
+						}
+						ir_long_tick = 0;
+					}
+				}
+				else	ir_err_f = 1;
+			}
+			else		IR_SETP = 1;
+			ir_tick = 0;
+			IR_H_F = 0;
+		}
+	}
+#endif
+
+#if XL_wuxian_IR
+
+	if (IR_in == 1)
+	{
+		if (!IR_H_F)
+		{
+			if (IR_SETP == 1)
+			{
+				if ((ir_tick > 60) ) // && (ir_tick < 254) 9MS   6-12MS
+				{
+					IR_SETP++;
+					ir_long_tick_err = 0;
+				}
+				else
+					ir_err_f = 1;
+			}
+			else if ((IR_SETP >= 3) && (IR_SETP < 67))
+			{
+				if ((ir_tick > 4) && (ir_tick < 20)) // 200-1000
+				{
+					if(ir_repeat_f==1)
+					{
+                     ir_repeat_f=0;
+				  	 IR_SETP=0;
+					}
+                    else	IR_SETP++;
+				}
+				else		ir_err_f = 1;	
+			}
+			ir_tick = 0;
+			IR_H_F = 1;
+		}
+	}
+	else
+	{
+		if (IR_H_F)
+		{
+			ir_long_tick = 0;
+			if (IR_SETP == 0)	IR_SETP++;
+			else if (IR_SETP == 2)
+			{
+				if ((ir_tick > 60) && (ir_tick < 110)) // 50*60=3ms  3000-5500
+				{
+					ir_repeat_f = 0;
+					IR_KEY_H = 0;
+					IR_KEY_L = 0;
+					ADDR_H = 0;
+					ADDR_L = 0;
+					IR_SETP++;
+				}
+
+				/////////////////   �ӳ����ĵط�
+
+#if XL_wuxian_IR_long_key
+				else  if((ir_tick>35)&&(ir_tick<60)) //50*60=3ms  <
+				{
+					IR_SETP++;
+                   	ir_ok_F=1;
+					ir_repeat_f = 1;
+					//IR_Long_KEY_tick=0;
+				}
+#endif
+				////////////////////////
+				else	ir_err_f = 1;
+			}
+			else if ((IR_SETP >= 2) && (IR_SETP < 67))
+			{
+				if ((ir_tick > 4) && (ir_tick < 40)) // 400-2MS
+				{
+					IR_SETP++;
+IR_F:
+/*
+					if (ir_tick > 20)
+					{
+						ir_data_temp = ir_data_temp | 0x80;  
+					}
+					else
+					{
+						ir_data_temp = ir_data_temp & 0x7F; 
+					}
+
+					if(IR_SETP==19)
+					{
+						ADDR_L  = ir_data_temp;
+					}
+					else if(IR_SETP==35)
+					{
+						ADDR_H  = ir_data_temp;
+					}
+					else if(IR_SETP==51)
+					{
+						IR_KEY_L  = ir_data_temp;
+					}
+					else if(IR_SETP==67)
+					{
+						IR_KEY_H = ir_data_temp;
+					}
+					ir_data_temp =ir_data_temp>>1;
+*/
+
+					IR_KEY_H = IR_KEY_H >> 1;
+					IR_KEY_L = IR_KEY_L >>>   1;
+					ADDR_H = ADDR_H >>> 1;
+					ADDR_L = ADDR_L >>> 1;
+					if (ir_tick > 20)		IR_KEY_H .7 = 1;
+					else					IR_KEY_H .7 = 0;
+					if (IR_SETP == 67)
+					{
+						ir_end_f = 1;
+						ir_ok_F = 1;
+						ir_long_tick_err = 0;
+						ir_deal_F = 0;
+						ir_count = 0;
+						//ir_long_tick = 0;
+					}
+				}
+				else	ir_err_f = 1;
+			}
+			else if (IR_SETP == 68)	IR_SETP++;
+			else	IR_SETP = 1;
+			ir_tick = 0;
+			IR_H_F = 0;
+		}
+	}
+#endif
+	if (ir_err_f )
+	{
+	//	ir_long_tick = 0;
+		ir_err_f = 0;
+		ir_repeat_f = 0;
+		IR_SETP = 0;
+		IR_KEY_L = 0xFF;
+		ir_data_temp = 0;
+	//	ir_end_f   = 0;
+	}
+}
+#endif
+
+#endif

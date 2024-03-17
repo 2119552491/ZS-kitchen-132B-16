@@ -1,0 +1,330 @@
+
+#include "common.h"
+
+#if XL_huancai		   
+
+byte led_level_temp;
+byte led_num;
+
+byte send_time_count;
+byte send_count;
+
+byte send_data_table[ send_data_table_num + send_data_table_num + send_data_table_num ]; // 81 send_data_table
+
+word point_send_data_table1;
+word point_send_data_table2;
+
+void send_three_byte ();
+
+void send_all_byte()
+{
+	disgint;
+		   
+	led_num = LED_num_MAX;
+
+	while( led_num -- )
+	{ 
+		led_level_temp = LED_G_PWM_expect ;
+		send_one_byte(  );// 
+		led_level_temp = LED_R_PWM_expect;
+		send_one_byte(  );// 
+		led_level_temp = LED_B_PWM_expect;
+		send_one_byte(  );//  
+
+#if XL_time_Sleep		   
+		Sleep_time_50us_tick+=2;
+#endif
+	}
+	engint;
+}
+
+void send_all_byte_no_interrput_deal() // send_all_byte_no_interrput
+{
+//	disgint;
+		   
+	//LED_num = LED_num_MAX;
+
+	while( led_num -- )
+	{ 
+		led_level_temp = LED_G_PWM_expect ;
+		send_one_byte(  );// 
+		led_level_temp = LED_R_PWM_expect;
+		send_one_byte(  );// 
+		led_level_temp = LED_B_PWM_expect;
+		send_one_byte(  );//  
+
+#if XL_time_Sleep		   
+		Sleep_time_50us_tick+=2;
+#endif
+	}
+//	engint;
+}
+
+void send_000_no_interrput_deal()
+{
+//	disgint;
+
+	//LED_num = LED_num_MAX ;
+	while( led_num -- )
+	{
+		led_level_temp = 0;
+		send_one_byte(  );// 
+		led_level_temp = 0;
+		send_one_byte(  );// 
+		led_level_temp = 0;
+		send_one_byte(  );// 
+	}
+//	engint;
+}
+
+void send_000()
+{
+	disgint;
+
+	//LED_num = LED_num_MAX ;
+	while( led_num -- )
+	{
+		led_level_temp = 0;
+		send_one_byte(  );// 
+		led_level_temp = 0;
+		send_one_byte(  );// 
+		led_level_temp = 0;
+		send_one_byte(  );// 
+	}
+	engint;
+}
+
+
+void send_three_byte()
+{
+//	disgint;
+		led_level_temp = LED_G_PWM_expect ;
+		send_one_byte(  );// 
+		led_level_temp = LED_R_PWM_expect;
+		send_one_byte(  );// 
+		led_level_temp = LED_B_PWM_expect;
+		send_one_byte(  );//  
+
+#if XL_time_Sleep		   
+		Sleep_time_50us_tick+=2;
+#endif
+
+//	engint;
+}
+
+void send_one_byte()
+{
+
+	byte send_long = 8;
+
+SEND_BYTE1_LOOP:
+
+	if( send_long )
+	{
+		if( led_level_temp & 0x80 )
+			GOTO SEND_BYTE1_BIT_H;
+	}
+	else
+	{
+		return;
+	}
+
+SEND_BYTE1_BIT_L:
+	LED_R = 1;// 250ns
+
+#if SYSCLK_8M		   
+	LED_R = 1;// 250ns
+#endif
+
+	LED_R = 0;// 750ns
+	led_level_temp = led_level_temp<<1;
+	send_long--;
+	GOTO SEND_BYTE1_LOOP;
+
+SEND_BYTE1_BIT_H:
+
+	LED_R = 1;// 250ns
+	LED_R = 1;// 250ns
+	LED_R = 1;// 250ns
+
+#if SYSCLK_8M		   
+	LED_R = 1;// 250ns
+	LED_R = 1;// 250ns
+	LED_R = 1;// 250ns
+#endif
+
+
+	LED_R = 0;// 750ns
+	led_level_temp = led_level_temp<<1;
+	send_long--;
+	GOTO SEND_BYTE1_LOOP;
+
+}
+
+void send_byte_deal()
+{
+//	if( Color_mode )
+	{
+		//disgint;
+/* 
+		if( led_mode != Color_mode_Max  + 3 )
+			RTC_led_level = led_level;*/
+		if( RTC_led_level >= 254 )
+			led_level_255_1 = 16;
+		else
+			led_level_255_1 = ( RTC_led_level + 1 ) >> 4; // + 8 led_level_255_1
+
+		led_level_16_2  = led_level_255_1+ led_level_255_1;
+		led_level_16_3  = led_level_16_2 + led_level_255_1;
+		led_level_16_4  = led_level_16_3 + led_level_255_1;
+		led_level_16_5  = led_level_16_4 + led_level_255_1;
+		led_level_16_6  = led_level_16_5 + led_level_255_1;
+
+		led_level_16_7  = led_level_16_6 + led_level_255_1;
+		led_level_16_8  = led_level_16_7 + led_level_255_1;
+		led_level_16_9  = led_level_16_8 + led_level_255_1;
+		led_level_16_10 = led_level_16_9 + led_level_255_1;
+
+		led_level_16_11  = led_level_16_10 + led_level_255_1;
+		led_level_16_12  = led_level_16_11 + led_level_255_1;
+		led_level_16_13  = led_level_16_12 + led_level_255_1;
+		led_level_16_14  = led_level_16_13 + led_level_255_1;
+		led_level_16_15  = led_level_16_14 + led_level_255_1;
+
+		a=Color_mode;
+		R_LED_Color_LEVEL_TABLE(); // LED_W_PWM = 0;
+		XL_temp_count = a ;
+		LED_PWM_16_LEVEL_TABLE();
+		LED_R_PWM_expect = led_level_temp;
+		//send_one_byte();//
+
+		a=Color_mode;
+		G_LED_Color_LEVEL_TABLE(); // LED_W_PWM = 0;
+		XL_temp_count = a ;
+		LED_PWM_16_LEVEL_TABLE();
+		LED_G_PWM_expect = led_level_temp;
+		//send_one_byte();//
+
+		a=Color_mode;
+		B_LED_Color_LEVEL_TABLE(); // LED_W_PWM = 0;
+		XL_temp_count = a ;
+		LED_PWM_16_LEVEL_TABLE();
+		LED_B_PWM_expect = led_level_temp;
+
+		//engint;
+	}
+}
+
+void Color_INIT_LEVEL_TAB_send()
+{
+//	if( Color_mode )
+	{
+//		disgint;
+		RTC_led_level = led_level;
+
+		if( RTC_led_level >= 254 )
+			led_level_255_1 = 16;
+		else
+			led_level_255_1 = ( RTC_led_level + 1 ) >> 4; // + 8 led_level_255_1
+
+		led_level_16_4  = led_level_255_1 <<2 ;
+		led_level_16_8  = led_level_16_4  <<1 ;
+		led_level_16_12 = led_level_16_8  <<1 ;
+
+		a=Color_mode;
+		G_LED_Color_LEVEL_TABLE(); // LED_G_PWM_expect = 0;
+		XL_temp_count = a ;
+		LED_PWM_4_LEVEL_TABLE();
+//		LED_G_PWM_expect = led_level_temp;
+		send_one_byte();//
+
+		a=Color_mode;
+		R_LED_Color_LEVEL_TABLE(); // LED_R_PWM_expect = 0;
+		XL_temp_count = a ;
+		LED_PWM_4_LEVEL_TABLE();
+//		LED_R_PWM_expect = led_level_temp;
+		send_one_byte();//
+
+		a=Color_mode;
+		B_LED_Color_LEVEL_TABLE(); // LED_B_PWM_expect = 0;
+		XL_temp_count = a ;
+		LED_PWM_4_LEVEL_TABLE();
+//		LED_B_PWM_expect = led_level_temp;
+		send_one_byte();//
+
+#if XL_time_Sleep		   
+		Sleep_time_50us_tick+=3;
+#endif
+//		engint;
+	}
+}
+
+void HC_INIT_LEVEL_TAB_send() 
+{
+//	if( Color_mode )
+	{
+		disgint;
+
+		a=Color_mode;
+		HC_G_LED_Color_LEVEL_TABLE(); // LED_G_PWM_expect = 0;
+		XL_temp_count = a ;
+		LED_PWM_16_LEVEL_TABLE();
+//		LED_G_PWM_expect = led_level_temp;
+		send_one_byte();//
+
+		a=Color_mode;
+		HC_R_LED_Color_LEVEL_TABLE(); // LED_R_PWM_expect = 0;
+		XL_temp_count = a ;
+		LED_PWM_16_LEVEL_TABLE();
+//		LED_R_PWM_expect = led_level_temp;
+		send_one_byte();//
+
+		a=Color_mode;
+		HC_B_LED_Color_LEVEL_TABLE(); // LED_B_PWM_expect = 0;
+		XL_temp_count = a ;
+		LED_PWM_16_LEVEL_TABLE();
+//		LED_B_PWM_expect = led_level_temp;
+		send_one_byte();//
+
+#if XL_time_Sleep		   
+		Sleep_time_50us_tick+=3;
+#endif
+//		engint;
+	}
+}
+/*
+void INIT_LEVEL_TAB_send(void)
+{
+//	if( Color_mode )
+	{
+//		disgint;
+
+		a=Color_mode;
+		G_LED_Color_LEVEL_TABLE(); // LED_G_PWM_expect = 0;
+		XL_temp_count = a ;
+		LED_PWM_LEVEL_TABLE();
+//		LED_G_PWM_expect = led_level_temp;
+		send_one_byte();//
+
+		a=Color_mode;
+		R_LED_Color_LEVEL_TABLE(); // LED_R_PWM_expect = 0;
+		XL_temp_count = a ;
+		LED_PWM_LEVEL_TABLE();
+//		LED_R_PWM_expect = led_level_temp;
+		send_one_byte();//
+
+		a=Color_mode;
+		B_LED_Color_LEVEL_TABLE(); // LED_B_PWM_expect = 0;
+		XL_temp_count = a ;
+		LED_PWM_LEVEL_TABLE();
+//		LED_B_PWM_expect = led_level_temp;
+		send_one_byte();//
+
+#if XL_time_Sleep		   
+		Sleep_time_50us_tick+=3;
+#endif
+//		engint;
+	}
+}
+*/
+#endif

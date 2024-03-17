@@ -1,0 +1,139 @@
+﻿
+
+#include "XL_common.h"
+
+#if YW_Color
+
+#if 0 
+
+void IR_KEY_DEAL()  //
+{         
+	byte key_loop_time = 0;
+
+	if ( ir_ok_F == 0 )
+		return;
+	ir_ok_F = 0;  	
+	
+	if (ir_count >= ir_count_repeat )
+	{
+	//	ir_count = ir_count_repeat;
+		#if XL_wuxian_duima & 1//IC_PMS152
+			IR_Dui_Ma_DEAL();  	//	duima
+		#endif
+
+		return;
+	}
+	ir_count++; // 
+
+	if (ir_deal_F == 1)
+		return;
+	ir_deal_F = 1;  
+
+#if XL_wuxian_duima & 1//IC_PMS152
+	if ( ADDR_H != ADDR_H_check  ) // 0x55 0xE2 0xE2 0xFF 0xBA 0xFF  0x12 0x00 0xE2
+		return;			 //   0x28
+	if ( ADDR_L != ADDR_L_check  ) //0xFF  0xFB 0xFF 0x21 0xFB  0xF6 0xCF 0xEF 0xFB
+		return;			 // 
+#endif
+
+#if IR_KEY_L_ON_OFF
+	if( IR_KEY_L == IR_KEY_L_ON )      // 0x25 short_mode_init_F = 1;
+	{
+		if( IR_LED_ON_F )	IR_LED_ON_F = 0;
+		else				IR_LED_ON_F = 1;  // Color_mode = led_mode;
+	}  
+#else
+	if( IR_KEY_L == IR_KEY_L_OFF )    IR_LED_ON_F = 0;   // 0x25
+	if( IR_KEY_L == IR_KEY_L_ON )     IR_LED_ON_F = 1;// 0x25
+#endif
+//	disgint;
+	if( IR_LED_ON_F )      // 0x25
+	{  
+		switch( IR_KEY_L )
+		{          
+			case IR_KEY_L_dingshi_60_min:  //0x0C  IR_KEY_L_speed_add
+				sleep_mode_init_F = 1;
+				Time_mode = 60;
+			//	short_mode_init_F = 1; 
+				Flash_warning = 1;
+			//	LED_W_PWM_expect = 0;
+			//	LED_Y_PWM_expect = 0;
+				LED_Y_PWM_temp 	 = 0;
+				LED_W_PWM_temp 	 = 0;
+				break;  
+			case IR_KEY_L_user_color:  //0x0C  IR_KEY_L_speed_add
+//				if( fade_step == 0 )
+				{
+					led_level = led_level_Max;
+				//	led_mode  = led_mode_Mid;//  led_mode_Max
+					short_mode_init_F = 1;
+				}
+				break;   
+			case IR_KEY_L_color_add:  //0x0C  IR_KEY_L_speed_add
+			//	if( fade_step == 0 )
+				{
+					IR_KEY_L_deal = 250; 
+					#if IR_Long_key
+						ir_deal_F = 0;  
+						if(ir_count >= ir_count_repeat - 1) 	IR_KEY_L_deal  = 251;//
+					#endif
+				}
+
+				break;   
+			case IR_KEY_L_color_sub:  //0x0C  IR_KEY_L_speed_add
+			//	if( fade_step == 0 )
+				{
+					IR_KEY_L_deal = 252; 
+					#if IR_Long_key
+						ir_deal_F = 0;  
+						if(ir_count >= ir_count_repeat - 1) 	IR_KEY_L_deal  = 253;//
+					#endif
+				}
+				break;   
+			case IR_KEY_L_levle_add:  //0x0C  IR_KEY_L_speed_add
+				IR_KEY_L_deal = 200; 
+				#if IR_Long_key
+					ir_deal_F = 0;  
+					if(ir_count >= ir_count_repeat - 1)  	IR_KEY_L_deal  = 201;//
+				#endif
+				break;   
+
+			case IR_KEY_L_levle_sub: //   0x0B
+				IR_KEY_L_deal = 202; 
+				#if IR_Long_key
+					ir_deal_F = 0;       
+					if(ir_count >= ir_count_repeat - 1) 		IR_KEY_L_deal  = 203;//
+				#endif
+				break;  
+			case IR_KEY_L_user_color1:  //W xiuxian  
+			//	led_level = led_level_Max;
+				led_mode = led_mode_Max_2_4;
+				//short_mode_init_F = 1;
+				break; 
+
+			case IR_KEY_L_user_color2:  //YD
+			//	led_level = led_level_Max;
+				led_mode = led_mode_Max_3_4;
+			//	short_mode_init_F = 1;
+				break; 
+			case IR_KEY_L_user_color3:  //BG  IR_KEY_L_speed_add
+			//	led_level = led_level_Max_2_4;
+				led_mode = led_mode_Max_4_4;
+			//	short_mode_init_F = 1;
+				break; 
+			case IR_KEY_L_user_color4 :  //BR  IR_KEY_L_speed_add
+			//	led_level = led_level_Max_2_4;
+				led_mode = led_mode_Max_1_4;
+			//	short_mode_init_F = 1;
+				break; 
+			case IR_KEY_L_user_color5:  //XYD  IR_KEY_L_speed_add
+			//	led_level = led_level_Max_1_4;
+				led_mode = 0;
+			//	short_mode_init_F = 1;
+				break;   
+		}
+//		engint;
+	}              
+}
+#endif
+#endif

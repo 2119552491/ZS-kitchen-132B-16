@@ -1,0 +1,55 @@
+﻿
+#include "XL_common.h"
+
+#if YW_Color
+
+	byte LED_Y_PWM_expect;
+	byte LED_W_PWM_expect;
+
+	byte LED_Y_PWM_temp;
+	byte LED_W_PWM_temp;
+
+#if 0 
+
+void Color_INIT_LEVEL_TAB_YW()
+{
+	word XL_temp_count;
+
+//	if( Color_mode )
+	{
+
+	//	disgint;
+
+	//	RTC_led_level = led_level;
+
+	//	led_level_255_1 = ( led_level ) >> 10; // + 8 led_level_255_1
+
+		LED_Y_PWM_expect = 0;
+		LED_W_PWM_expect = 0;
+
+		temp_byte_value = led_mode ;
+
+		while( temp_byte_value -- )
+			XL_temp_count += led_level;
+/*
+		XL_temp_count = led_mode_Max - Color_mode_expect ;
+
+		while( XL_temp_count -- )
+			LED_Y_PWM_expect += led_level;
+*/
+
+		XL_temp_count    = XL_temp_count >> 6;//
+		if( XL_temp_count >= led_level )
+			XL_temp_count = led_level;
+
+		LED_W_PWM_expect = XL_temp_count;
+		LED_Y_PWM_expect = led_level - LED_W_PWM_expect;// >> 6; 
+
+		nop;
+//		engint;
+	}
+}
+
+#endif
+
+#endif

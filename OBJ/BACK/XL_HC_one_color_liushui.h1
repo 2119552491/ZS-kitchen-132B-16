@@ -1,0 +1,6 @@
+
+extern byte step_1_value;
+extern byte step_2_value;
+extern byte step_3_value;
+
+extern void XL_HC_one_color_liushui_deal();

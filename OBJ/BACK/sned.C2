@@ -1,0 +1,81 @@
+
+#include "common.h"
+
+byte i;
+byte led_level_temp;
+
+void send_0();
+void send_1();
+
+
+
+void send_0()
+{
+	byte count_PWM ;
+	count_PWM = 15;
+	while( count_PWM --)
+		LED_R = 1;
+	count_PWM = 8;
+	while( count_PWM --)
+		LED_R = 0;
+}
+
+void send_1()
+{
+	byte count_PWM ;
+	count_PWM = 31;
+	while( count_PWM --)
+		LED_R = 1;
+	count_PWM = 8;
+	while( count_PWM --)
+		LED_R = 0;
+}
+
+void  send_color_1_light(  ) // unsigned char led_level_temp
+{
+   	byte count_temp1 = 8;
+   	if( led_level_temp )
+   	{
+   	   	while( count_temp1-- )
+   	   	{
+           	if( led_level_temp & 0x80 )
+           	   send_1(); // 
+           	else
+           	   send_0();
+       	   	led_level_temp = led_level_temp<<1;
+   	   	}
+   	}
+   	else
+   	{
+        send_0();
+        send_0();
+       	send_0();
+        send_0();
+
+       	send_0();
+        send_0();
+       	send_0();
+        send_0();
+   	}
+}
+
+void Delay10us(void)
+{
+	i=5;
+	while(i--)
+	{
+		nop;
+	}
+}
+
+void Delay10ms(void)
+{
+	disgint;
+	word i1=5000;
+	while(i1--)
+	{
+		nop;
+	}
+	engint;
+}
+

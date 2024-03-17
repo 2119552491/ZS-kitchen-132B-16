@@ -1,0 +1,69 @@
+
+#include "XL_common.h"
+
+#if XL_tyn		   
+
+byte Power_F;
+
+byte tyn_tick1;
+
+byte tyn_tick2;
+
+void tyn_init() //
+{
+	sun_control					= 1;    // A.7    
+	sun_MODE	   	  			= 0;	//输入
+	#if download_mode
+
+	#else
+		sun_Pull_MODE     		= 1;	//上拉
+	#endif
+
+
+	USB							= 1;    // A.6   
+	USB_MODE	   			    = 0;
+	#if download_mode
+
+	#else
+		USB_Pull_MODE     		= 1;	//上拉
+	#endif
+
+
+	Power_F = 1;
+}
+
+void tyn_scan() //
+{
+	if( sun_control == 0 && USB == 0 ) //  add
+	{
+		if(tyn_tick1 >= Key_short_time ) // 
+		{
+			tyn_tick1  = Key_short_time;
+			if( IR_LED_ON_F == 0 )
+			{
+				short_mode_init_F = 1;
+				IR_LED_ON_F = 1;
+			}
+		}
+	}
+	else
+	{
+		tyn_tick1 = 0;
+	}
+
+	if( sun_control == 1 || USB == 1 )
+	{
+		if (tyn_tick2 >= Key_short_time ) // key_long_time
+		{
+			tyn_tick2 =  Key_short_time; // key_long_time
+			if( IR_LED_ON_F )
+			{
+				IR_LED_ON_F = 0;
+			}
+		}
+	}
+	else
+		tyn_tick2 = 0;
+}
+
+#endif

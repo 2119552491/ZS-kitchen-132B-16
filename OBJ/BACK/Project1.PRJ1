@@ -1,0 +1,93 @@
+[Ram_Break]
+Break1=No 0000
+Break2=No 0000
+Break3=No 0000
+Break4=No 0000
+[Stack_Break]
+Break1=Au 0000 00FF
+Break2=Au 0000 00FF
+Break3=Au 0000 00FF
+Break4=Au 0000 00FF
+Break5=Au 0000 00FF
+Break6=Au 0000 00FF
+Break7=Au 0000 00FF
+Break8=Au 0000 00FF
+[Ctrl_Break]
+Mark=51 1
+ICE=0 6 2 D48
+[INI]
+PROJECT=PRE_FILE
+[LINKS]
+~XL_HC_luoti.C
+~Project1.C
+~XL_I2C24C02.C
+~XL_MIC_AD.C
+~XL_HC_music_VOL.C
+~XL_HC_qicailiushui.C
+~XL_HC_send.C
+~XL_init.C
+~XL_IR.C
+~XL_IR_RGB.C
+~XL_IR_YW.C
+~XL_IR_send.C
+~XL_IR_duima_deal.C
+~XL_key_led.C
+~XL_key_juzheng.C
+~XL_level_speed.C
+~XL_RGB_Color.C
+~XL_YW_Color.C
+~XL_RGB_fade.C
+~XL_RGB_Flash.C
+~XL_RGB_huxi.C
+~XL_RGB_Jump.C
+~XL_RGB_liushui_Jump.C
+~XL_RGB_candle.C
+~XL_RGB_baoshan.C
+~XL_RGB_Mic4_huxi_255_to_0.C
+~XL_time1.C
+~XL_sleep_dingshi.C
+~XL_sleep_IC.C
+~XL_SMG_6_IO.C
+~XL_SMG_11_IO.C
+~XL_RGB_SOS_shan.C
+[HEAD]
+~XL_I2C24C02.h
+~XL_MIC_AD.h
+~XL_common.h
+~XL_HC_luoti.h
+~XL_HC_qicailiushui.h
+~XL_HC_send.h
+~XL_IO_config.h
+~XL_init.h
+~XL_IR.h
+~XL_IR_RGB.h
+~XL_IR_YW.h
+~XL_IR_send.h
+~XL_IR_duima_deal.h
+~XL_RGB_Color.h
+~XL_level_speed.h
+~XL_YW_Color.h
+~XL_RGB_fade.h
+~XL_HC_music_VOL.h
+~XL_RGB_Flash.h
+~XL_RGB_huxi.h
+~XL_RGB_Jump.h
+~XL_RGB_Mic4_huxi_255_to_0.h
+~XL_sleep_dingshi.h
+~XL_time1.h
+~XL_key_led.h
+~XL_key_juzheng.h
+~XL_RGB_liushui_Jump.h
+~XL_RGB_candle.h
+~XL_RGB_baoshan.h
+~XL_sleep_IC.h
+~XL_SMG_6_IO.h
+~XL_SMG_11_IO.h
+~XL_RGB_SOS_shan.h
+~extern.h
+[DEPEND]
+~$:INC_PDK\PFC232.INC
+~Project1.PRE
+[PRE]
+~Project1.PRJ
+~Project1.PRE

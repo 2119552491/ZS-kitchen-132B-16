@@ -1,0 +1,202 @@
+
+#include "common.h"
+
+void Led_mode_deal(); // MIN_
+
+bit short_mode_init_F; //  send_time_count
+
+byte Time_Count;
+
+byte step_1_value;/*
+byte step_2_value;
+byte step_3_value;
+byte step_4_value;*/
+bit back_F;
+
+byte fade_Time_Count;
+byte  RTC_mode_15_count;
+
+
+
+bit auto_RTC_mode_F;
+byte RTC_auto_count;
+byte RTC_mode_10_count;
+byte RTC_Color_mode;
+
+
+
+
+
+byte RTC_mode_10_step;
+
+byte RTC_mode_10_step_count;
+
+bit RTC_mode_10_count_F;
+
+void Led_mode_deal()
+{
+	if( IR_LED_ON_F == 1 )  // ON_F  led_level_init_F
+	{
+
+	}
+	else
+	{
+		LED_R_PWM_expect = 0;
+		LED_G_PWM_expect = 0;
+		LED_B_PWM_expect = 0;
+	}
+	/*
+		if(  led_level_init_F == 1 )  // ON_F  short_mode_init_F = 1  long_mode_init_F short_mode_init_F
+		{
+			led_level_init_F = 0; 
+
+			a = led_level_count;
+			LED_Color_LEVEL_TABLE();
+			led_level = a;
+
+			a = led_level_count;
+			LED_Color_LEVEL_TEMP_TABLE();
+			led_level_adjust_temp = a;
+		}*/
+		if(  short_mode_init_F == 1 )  // ON_F  short_mode_init_F = 1  long_mode_init_F short_mode_init_F
+		{
+			short_mode_init_F = 0; 
+			Flag_time_led_1ms_tick = 0;
+			if( led_mode <= Color_mode_Max )
+			{
+			//	a = led_mode;
+			//	IR_Key_Color_Table();//IR_Key_Table();
+				Color_mode  = led_mode;// short_mode_init_F = 1;
+				RTC_mode =0;
+				RTC_led_level = led_level;
+				Color_INIT_LEVEL_TAB();
+			}
+			else //if( led_mode <= Color_mode_Max + RTC_mode_Max ) // 
+			{
+				Color_mode  = 1; // short_mode_init_F = 1;
+				RTC_mode    = led_mode - Color_mode_Max;
+				fade_Time_Count = 1;/*
+				if( led_mode != Color_mode_Max + 5 )
+					RTC_led_level = led_level;
+				else*/
+					RTC_led_level   = led_level_Max;
+
+				LED_R_PWM_expect=led_level_Max;
+				LED_G_PWM_expect=0;
+				LED_B_PWM_expect=0;
+				back_F = 0;
+			//	send_time_count 		  = 0;//	Color_mode 			= 0;//bug7
+				Time_Count 				  = 1;
+				decrease_F 				  = 0;
+				step_1_value 	 		  = 0;
+			//	RTC_mode_10_count_F   	  = 0;
+			//	RTC_mode_15_count		  = 0;
+			//	RTC_mode_10_step 		  = 0;
+				time_led_speed_ms_tick 	  = 0; // 
+				Led_time_1ms_tick 	  	  = 0; // time_led_speed_ms_tick
+
+//				RTC_mode_15_count_temp	  = 0;
+				if( led_mode == Color_mode_Max + RTC_mode_Max +  4 )
+					mic_mode_F  = 1;
+				if( led_mode == Color_mode_Max + RTC_mode_Max +  4 || led_mode == Color_mode_Max + RTC_mode_Max +  2 )
+					LED_R_PWM_expect	= 0;
+			//	if( RTC_mode == 5 )
+			}
+
+			/*
+			else if( led_mode <= Color_mode_Max + RTC_mode_Max + MIC_mode_Max ) // 
+			{
+				Color_mode  = 0; // short_mode_init_F = 1;
+				RTC_mode    = led_mode - Color_mode_Max ;// - RTC_mode_Max
+			}*/
+/*
+			if( sleep_mode_init_F == 0 )
+			{
+				LED_num = send_data_table_num + send_data_table_num + send_data_table_num;
+				point_send_data_table1 =  send_data_table ;
+				while( LED_num -- )
+				{
+					*point_send_data_table1 = 0;
+					point_send_data_table1++;
+				}
+			}
+*/
+			#if XL_time_Sleep
+				if( sleep_mode_init_F == 1 )
+				{
+					sleep_mode_init_F = 0;
+				
+					Sleep_time_50us_tick = 0;
+					Sleep_time_10ms_tick = 0;
+					Sleep_time_1s_tick   = 0;
+					Sleep_time_1min_tick = 0;
+				}
+			#endif
+
+		//	disgint;
+		//	if( RTC_mode == 0 )
+
+		//	engint;
+		}
+	
+}
+
+#if 0
+
+				send_byte_deal();
+/*
+			if( RTC_mode == 4 || RTC_mode == 5 )
+				fade_Time_Count = 1;*/
+
+		/*	if( RTC_mode == 10 )
+			{
+				temp_deal_2();
+				send_byte_deal();
+
+				send_data_table[0] = LED_G_PWM_expect;
+				send_data_table[1] = LED_R_PWM_expect;
+				send_data_table[2] = LED_B_PWM_expect;
+			}
+			else*/
+
+
+	//		send_000_cur_adc();  //   INIT_LEVEL_TAB
+	//		Color_mode_temp = Color_mode;
+
+			if( led_mode == 19 )
+			{
+			//	RTC_Color_mode = 15;
+			//	RTC_mode_10_count = 3;
+				if( auto_RTC_mode_F == 0 )
+				{
+					auto_RTC_mode_F= 1;
+					RTC_mode = 1;
+					goto RTC_deal;
+				}
+				else
+				{
+					RTC_mode ++;
+					if( RTC_mode >= 15 + 1 ) // LED_LEVEL_Max
+						RTC_mode = 1;
+					goto RTC_deal;
+				}
+			}
+
+			if( led_mode <= 9 )
+			{
+				a = led_mode;
+				mode_color_TABLE();
+				Color_mode = a;
+				RTC_Color_mode = 0;
+				RTC_mode =0;
+				RTC_mode_10_count = 0;
+			}
+			else 
+			else if( led_mode <= 26 ) // 
+			{
+				a = led_mode - 16;
+				mode_RTC_TABLE();
+				RTC_mode = a;
+			}
+
+#endif

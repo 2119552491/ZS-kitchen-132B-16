@@ -1,0 +1,69 @@
+
+#include "XL_common.h"
+
+#if  XL_wuxian_duima
+
+bit duima_F;
+bit duima_flash_F;
+bit quxiao_duima_flash_F;
+bit return_F;
+
+byte duima_write_F;
+
+byte ADDR_H_check;
+byte ADDR_L_check;
+
+
+
+void IR_Dui_Ma_DEAL(void)  //
+{
+	if( duima_F )
+	{
+		if ( ir_count >= 10  )
+		{
+			if ( IR_KEY_L == 0x03 )
+			{
+				ADDR_H_check = ADDR_H;
+				ADDR_L_check = ADDR_L;
+				duima_write_F = 1;
+				duima_flash_F = 1;
+			}
+			else if ( IR_KEY_L == 0x01 )
+			{
+				ADDR_H_check = 0;
+				ADDR_L_check = 0;
+				duima_write_F = 0;
+				quxiao_duima_flash_F = 1;
+			}
+			duima_F = 0;
+		}
+		return;
+	}
+	else
+	{
+		if( IR_KEY_L_deal == 0x43 ) 
+		{
+			if ( ir_count >= 80 )
+			{
+				debug_F = 1;
+				IR_debug_F = 1;
+				ir_long_key_num_add_F = 1;
+			}
+
+			if ( ir_count >= 6 )
+				return_F = 1;
+
+
+		}
+		else
+		{
+			if ( ir_count >= 6 )
+			{
+				ir_count = 6;
+				return_F = 1;
+			}
+		}
+
+	}
+}
+#endif

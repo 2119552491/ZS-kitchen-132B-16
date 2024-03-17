@@ -1,0 +1,63 @@
+#include "common.h"
+
+#if XL_AD     			 
+
+void Mic1_deal() // Led_time_1ms_tick && LED_Flash_warning_F == 0
+{
+	if( IR_MIC_init_F  )  // ON_F && IR_MIC_F == 2 22 
+//	if( Led_time_1ms_tick >= 1  )  // ON_F && IR_MIC_F == 2 22 
+	{
+		IR_MIC_init_F = 0;
+		if( MIC_show_vol == cur_adc_error  )
+			MIC_show_vol = MIC_show_vol;
+		else if( MIC_show_vol  > cur_adc_error )
+		{
+			mic_cnt++;
+			if( mic_cnt >= 64 )
+			{
+				mic_cnt = 0;
+				MIC_show_vol--;
+			}
+
+		}
+		else if( MIC_show_vol < cur_adc_error  )
+		{
+			MIC_show_vol+= 6;
+		}
+
+		if( MIC_show_vol >= send_data_table_num )
+			MIC_show_vol = send_data_table_num;
+/*
+		if( MIC_show_vol <= 0 )
+			MIC_show_vol = 0;*/
+		if ( Led_time_1ms_tick >=  10 ) // 255 led_speed_Max led_level LED_LEVEL_Max RTC_mode_15_count
+		{
+			Led_time_1ms_tick = 0;
+
+			send_count = 0; //send_count 
+			led_num    = 0;
+
+			disgint;
+
+			Color_mode = 0;     
+			led_num    = MIC_show_vol;
+			while( led_num -- ) //  send_data_table_num
+			{
+				Color_mode++;
+				HC_INIT_LEVEL_TAB_send();
+
+			#if XL_time_Sleep	
+					Sleep_time_50us_tick+=2;
+			#endif
+			}
+
+			led_num = send_data_table_num - MIC_show_vol;
+			send_000();
+
+
+			engint;
+		}
+	}
+}
+
+#endif

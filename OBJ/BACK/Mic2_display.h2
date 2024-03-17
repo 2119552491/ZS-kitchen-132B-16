@@ -1,0 +1,4 @@
+
+extern void Mic2_Mode_TABLE();
+
+extern void Mic2_deal();

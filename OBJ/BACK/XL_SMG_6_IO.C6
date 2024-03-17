@@ -1,0 +1,406 @@
+
+#include "XL_common.h"
+
+#if XL_SMG_6_IO
+ 
+//word point_data_address;
+
+
+//byte SMG_IO_Num , SMG_IO_Num1 , SMG_IO_Num2 , SMG_IO_Num3 , SMG_IO_Num4 ;
+byte SMG_temp_count;
+byte SMG_temp_count_A;
+byte SMG_temp_count_B;
+
+byte SMG_IO_Num[5];
+
+byte SMG_weishu_num[4];
+
+//byte SMG_qianwei_num ,SMG_baiwei_num  ,SMG_shiwei_num , SMG_gewei_num;
+
+//byte SMG_qianwei_num_dingshi ,SMG_baiwei_num_dingshi  ,SMG_shiwei_num_dingshi , SMG_gewei_num_dingshi;
+
+byte SMG_step;
+byte SMG_step2;
+ 
+//byte XL_temp_count;
+//byte SMG_shiwei_50us_time_count;
+
+byte SMG_display_num;
+
+void SMG_abcdefg_value_get();
+void num_Table();
+ 
+void SMG_display_6_step();
+
+void SMG_byte_to_suzhu(  byte SMG_byte ) 	
+{
+//	SMG_tem_value = SMG_byte;
+
+	SMG_weishu_num[0] = 0;
+	SMG_weishu_num[1] = 0;
+	SMG_weishu_num[2] = 0;
+
+	while( SMG_byte --)
+	{
+		SMG_weishu_num[2]++;
+		if( SMG_weishu_num[2] >= 10 )
+		{
+			SMG_weishu_num[2] = 0;
+			SMG_weishu_num[1]++;
+			if( SMG_weishu_num[1] >= 10 )
+			{
+				SMG_weishu_num[1] = 0;
+				SMG_weishu_num[0]++;
+			}
+		}
+	}
+}
+
+
+void SMG_abcdefg_value_get() 	 
+{
+	SMG_temp_count_B = 3;
+//	if( SMG_mode <= 4 )
+	{
+		while( SMG_temp_count_B -- )
+		{
+		//	if( SMG_mode <=2 )
+				SMG_display_num = SMG_weishu_num[ SMG_temp_count_B ];// 	          + ;
+
+			num_Table();
+
+			SMG_IO_Num[SMG_temp_count_B] = SMG_IO_Num[4];
+		}
+	}
+
+//	SMG_display3();
+}
+
+void SMG_display_6_step()
+{
+//	if (SMG_shiwei_50us_time_count >= SMG_6_IO_time)
+	{
+		SMG_step++;
+	//	PB = 0x00;
+
+#define SMG_1 		   	   PB.1
+#define SMG_2 		   	   PB.0 // pb.
+#define SMG_3		   	   PB.2//PA.7
+#define SMG_4 		   	   PB.5  // 
+#define SMG_5 		   	   PB.4 
+#define SMG_6 		   	   PA.5
+/*
+		SMG_1 = 1;
+		SMG_2 = 1;
+		SMG_3 = 1;
+		SMG_4 = 1;
+		SMG_5 = 1;
+		SMG_6 = 1;
+
+		SMG_1_modeC = input_gaozu;// input ouput
+		SMG_2_modeC = input_gaozu;
+		SMG_3_modeC = input_gaozu;
+		SMG_4_modeC = input_gaozu;
+		SMG_5_modeC = input_gaozu;
+		SMG_6_modeC = input_gaozu;*/
+
+		PA = 0xff;
+		PB = 0xff;
+		PAC = AD_power_mode | fa_she_mode;
+		PBC = 0x00;
+		SMG_temp_count_A = AD_power_mode | fa_she_mode;
+		SMG_temp_count_B = 0x00;
+/*
+		if( SMG_step == 1 )
+		{
+			SMG_1    	=0;//
+			SMG_1_modeC =ouput;//
+		}*/
+		if( SMG_step == 2 )
+		{
+			if (SMG_IO_Num[0] & 0x04 )// == 1
+			{
+				SMG_5    	  =1;//
+				SMG_temp_count_B |= SMG_5_mode;
+				PBC = SMG_temp_count_B;
+			//	SMG_5_modeC = ouput; 
+				
+			}
+
+			if (SMG_IO_Num[0] & 0x20 )// == 1
+			{
+				SMG_3    	  =1;//
+				SMG_temp_count_B |= SMG_3_mode;
+				PBC = SMG_temp_count_B;
+			//	SMG_3_modeC = ouput; 
+			}
+			
+			if (SMG_IO_Num[0] & 0x40 )// == 1
+			{
+				SMG_4    	  =1;//
+				SMG_temp_count_B |= SMG_4_mode;
+				PBC = SMG_temp_count_B;
+			}
+			SMG_2    	=0;//
+			SMG_temp_count_B |= SMG_2_mode;
+			PBC = SMG_temp_count_B;
+
+		}
+		if( SMG_step == 3 )
+		{
+			if (SMG_IO_Num[0] & 0x01 )// == 1
+			{
+				SMG_2    		=1;//
+				SMG_temp_count_B |= SMG_2_mode;
+				PBC = SMG_temp_count_B;
+
+			}
+			if (SMG_IO_Num[1] & 0x10 )// == 1
+			{
+				SMG_6    		=1;//
+				SMG_temp_count_A |= SMG_6_mode;
+				PAC = SMG_temp_count_A;
+			}
+			
+			if (SMG_IO_Num[1] & 0x20 )// == 1
+			{
+				SMG_4    		=1;//
+				SMG_temp_count_B |= SMG_4_mode;
+				PBC = SMG_temp_count_B;
+
+			}
+
+			if (SMG_IO_Num[1] & 0x40 )// == 1
+			{
+				SMG_5    		=1;//
+				SMG_temp_count_B |= SMG_5_mode;
+				PBC = SMG_temp_count_B;
+
+			}
+			SMG_3    	=0;//
+			SMG_temp_count_B |= SMG_3_mode;
+			PBC = SMG_temp_count_B;
+
+		}
+		if( SMG_step == 4 )
+		{
+			if (SMG_IO_Num[0] & 0x02 )// == 1
+			{
+				SMG_2    	=1;//
+				SMG_temp_count_B |= SMG_2_mode;
+				PBC = SMG_temp_count_B;
+
+			}
+
+			if (SMG_IO_Num[1] & 0x01 )// == 1
+			{
+				SMG_5    	=1;//
+				SMG_temp_count_B |= SMG_5_mode;
+				PBC = SMG_temp_count_B;
+
+
+			}
+			if (SMG_IO_Num[1] & 0x08 )// == 1
+			{
+				SMG_3    	=1;//
+				SMG_temp_count_B |= SMG_3_mode;
+				PBC = SMG_temp_count_B;
+
+			}
+			if (SMG_IO_Num[2] & 0x08 )// == 1
+			{
+				SMG_6    	=1;//
+				SMG_temp_count_A |= SMG_6_mode;
+				PAC = SMG_temp_count_A;
+
+			}
+			SMG_4    	=0;//
+			SMG_temp_count_B |= SMG_4_mode;
+			PBC = SMG_temp_count_B;
+
+		}
+		if( SMG_step == 5 )
+		{
+			if (SMG_IO_Num[0] & 0x10 )// == 1
+			{
+				SMG_2    	=1;//
+				SMG_temp_count_B |= SMG_2_mode;
+				PBC = SMG_temp_count_B;
+
+			}
+			if (SMG_IO_Num[1] & 0x02 )// == 1
+			{
+				SMG_3    	=1;//
+				SMG_temp_count_B |= SMG_3_mode;
+				PBC = SMG_temp_count_B;
+
+			}
+
+			if (SMG_IO_Num[1] & 0x04 )// == 1
+			{
+				SMG_4    	=1;//
+				SMG_temp_count_B |= SMG_4_mode;
+				PBC = SMG_temp_count_B;
+
+			}
+
+			if (SMG_IO_Num[2] & 0x20 )// == 1
+			{
+				SMG_6    	=1;//
+				SMG_temp_count_A |= SMG_6_mode;
+				PAC = SMG_temp_count_A;
+
+			}
+			if (SMG_IO_Num[2] & 0x40 )// == 1
+			{
+				SMG_1    	=1;//
+				SMG_temp_count_B |= SMG_1_mode;
+				PBC = SMG_temp_count_B;
+
+			}
+			SMG_5    	=0;//
+			SMG_temp_count_B |= SMG_5_mode;
+			PBC = SMG_temp_count_B;
+			//SMG_step = 0; 
+		}
+		if( SMG_step == 6 )
+		{
+			if (SMG_IO_Num[0] & 0x08 )// == 1
+			{
+				SMG_2    	=1;//
+				SMG_temp_count_B |= SMG_2_mode;
+				PBC = SMG_temp_count_B;
+
+			}
+
+			if (SMG_IO_Num[2] & 0x01 )// == 1
+			{
+				SMG_1    	=1;//
+				SMG_temp_count_B |= SMG_1_mode;
+				PBC = SMG_temp_count_B;
+
+			}
+
+			if (SMG_IO_Num[2] & 0x02 )// == 1
+			{
+				SMG_3    	=1;//
+				SMG_temp_count_B |= SMG_3_mode;
+				PBC = SMG_temp_count_B;
+
+			}
+			if (SMG_IO_Num[2] & 0x04 )// == 1
+			{
+				SMG_5    	=1;//
+				SMG_temp_count_B |= SMG_5_mode;
+				PBC = SMG_temp_count_B;
+
+			}
+			if (SMG_IO_Num[2] & 0x10 )// == 1
+			{
+				SMG_4    	=1;//
+				SMG_temp_count_B |= SMG_4_mode;
+				PBC = SMG_temp_count_B;
+
+			}
+			SMG_6    	=0;//
+			SMG_temp_count_A |= SMG_6_mode;
+			PAC = SMG_temp_count_A;
+
+			SMG_step = 0;
+		}
+#if 0 
+		if( SMG_step == 7 )
+		{
+			SMG_1_modeC = ouput; 
+			SMG_6_modeC = ouput; 
+				/*
+			PBC = SMG_6_mode | SMG_1_mode;*/
+			if( SMG_1_F )
+			{
+				//SMG_1_F = 0;
+				SMG_1 = 1;
+				//PB = SMG_1_mode ;//
+			}
+			else
+			{
+				//SMG_1_F = 1;
+				//PB = 0;
+				SMG_1 = 0;
+			}
+
+			SMG_step = 0;
+		}
+#endif
+	}
+}
+
+
+void num_Table(void)
+{
+	switch (SMG_display_num)
+	{
+	case 0:
+		SMG_IO_Num[4] = 0x3F; // 0
+		break;
+	case 1:
+		SMG_IO_Num[4] = 0x06;
+		break;
+	case 2:
+		SMG_IO_Num[4] = 0x5B;
+		break;
+	case 3:
+		SMG_IO_Num[4] = 0x4F;
+		break;
+	case 4:
+		SMG_IO_Num[4] = 0x66;
+		break;
+	case 5:
+		SMG_IO_Num[4] = 0x6D; //  0x02
+		break;
+	case 6:
+		SMG_IO_Num[4] = 0x7D;
+		break;
+	case 7:
+		SMG_IO_Num[4] = 0x07;
+		break;
+	case 8:
+		SMG_IO_Num[4] = 0x7F;
+		break;
+	case 9:
+		SMG_IO_Num[4] = 0x6F; // 0x00
+		break;
+	case 10:// yanshi
+		SMG_IO_Num[4] = 0x6F; // 0x00
+		break;
+/*
+#define _SMG_xiaoying		 11
+#define _SMG_o			     12
+#define _SMG_p			     13
+#define _SMG_n			     14
+#define _SMG_f			     default  15
+*/
+	case _SMG_xiaoying:
+		SMG_IO_Num[4] = 0x00; // xiaoying
+		break;
+	case _SMG_o:
+		SMG_IO_Num[4] = 0x5C; // 0
+		break;
+	case _SMG_p:
+		SMG_IO_Num[4] = 0x73 ; //p 
+		break;
+	case _SMG_n:
+		SMG_IO_Num[4] = 0x37; // n
+		break;
+
+	default://	case 14:
+		SMG_IO_Num[4] = 0x71; // f
+		break;
+
+/*
+	default:
+		SMG_IO_Num = 0x71; // L
+		break;*/
+	}
+}
+
+#endif

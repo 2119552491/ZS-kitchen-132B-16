@@ -1,0 +1,5 @@
+
+
+extern byte RTC_mode;
+extern void LED_7_Smooth_Mode_TABLE(void);
+extern void LED_7_Fade_Mode_TABLE(void); 
